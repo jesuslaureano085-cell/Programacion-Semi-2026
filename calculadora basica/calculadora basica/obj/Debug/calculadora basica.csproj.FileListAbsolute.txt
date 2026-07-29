@@ -1,0 +1,10 @@
+C:\Users\jesus\source\repos\Programacion-Semi-2026\calculadora basica\calculadora basica\bin\Debug\calculadora basica.exe.config
+C:\Users\jesus\source\repos\Programacion-Semi-2026\calculadora basica\calculadora basica\bin\Debug\calculadora basica.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\calculadora basica\calculadora basica\bin\Debug\calculadora basica.pdb
+C:\Users\jesus\source\repos\Programacion-Semi-2026\calculadora basica\calculadora basica\obj\Debug\calculadora basica.csproj.AssemblyReference.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\calculadora basica\calculadora basica\obj\Debug\calculadora_basica.Form1.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\calculadora basica\calculadora basica\obj\Debug\calculadora_basica.Properties.Resources.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\calculadora basica\calculadora basica\obj\Debug\calculadora basica.csproj.GenerateResource.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\calculadora basica\calculadora basica\obj\Debug\calculadora basica.csproj.CoreCompileInputs.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\calculadora basica\calculadora basica\obj\Debug\calculadora basica.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\calculadora basica\calculadora basica\obj\Debug\calculadora basica.pdb

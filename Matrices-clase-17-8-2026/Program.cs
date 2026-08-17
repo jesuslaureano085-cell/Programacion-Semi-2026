@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ppp
+namespace Matrices_clase_17_8_2026
 {
     static class Program
     {
@@ -16,7 +16,6 @@ namespace ppp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frm());
-        }
+            Application.Run(new Form1());        }
     }
 }

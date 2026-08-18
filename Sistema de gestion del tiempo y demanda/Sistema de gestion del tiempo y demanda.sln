@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.37507.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sistema de gestion del tiempo y demanda", "Sistema de gestion del tiempo y demanda.csproj", "{F6AA0BAC-77AD-49F4-B874-DA7B2C4B0EBA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6AA0BAC-77AD-49F4-B874-DA7B2C4B0EBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6AA0BAC-77AD-49F4-B874-DA7B2C4B0EBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6AA0BAC-77AD-49F4-B874-DA7B2C4B0EBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6AA0BAC-77AD-49F4-B874-DA7B2C4B0EBA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1988DC24-61B7-40D3-9770-1667E5ECE74F}
+	EndGlobalSection
+EndGlobal

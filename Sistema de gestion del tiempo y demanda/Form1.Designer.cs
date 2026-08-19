@@ -44,13 +44,13 @@ namespace Sistema_de_gestion_del_tiempo_y_demanda
             this.txtDui = new System.Windows.Forms.TextBox();
             this.txtDireccion = new System.Windows.Forms.TextBox();
             this.txtTelefono = new System.Windows.Forms.TextBox();
-            this.txtSangre = new System.Windows.Forms.TextBox();
             this.txtTriage = new System.Windows.Forms.TextBox();
             this.lblTriage = new System.Windows.Forms.Label();
             this.btmSalir = new System.Windows.Forms.Button();
             this.btmVerificar = new System.Windows.Forms.Button();
             this.txtEdad = new System.Windows.Forms.TextBox();
             this.cbxGenero = new System.Windows.Forms.ComboBox();
+            this.cbxSangre = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // lbl1
@@ -194,14 +194,6 @@ namespace Sistema_de_gestion_del_tiempo_y_demanda
             this.txtTelefono.TabIndex = 16;
             this.txtTelefono.TextChanged += new System.EventHandler(this.textBox7_TextChanged);
             // 
-            // txtSangre
-            // 
-            this.txtSangre.Location = new System.Drawing.Point(545, 270);
-            this.txtSangre.Name = "txtSangre";
-            this.txtSangre.Size = new System.Drawing.Size(151, 22);
-            this.txtSangre.TabIndex = 17;
-            this.txtSangre.TextChanged += new System.EventHandler(this.textBox8_TextChanged);
-            // 
             // txtTriage
             // 
             this.txtTriage.Location = new System.Drawing.Point(334, 312);
@@ -265,18 +257,31 @@ namespace Sistema_de_gestion_del_tiempo_y_demanda
             this.cbxGenero.TabIndex = 24;
             this.cbxGenero.SelectedIndexChanged += new System.EventHandler(this.cbxGenero_SelectedIndexChanged);
             // 
+            // cbxSangre
+            // 
+            this.cbxSangre.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbxSangre.FormattingEnabled = true;
+            this.cbxSangre.Items.AddRange(new object[] {
+            "Masculino",
+            "Femenino",
+            "Otro"});
+            this.cbxSangre.Location = new System.Drawing.Point(545, 268);
+            this.cbxSangre.Name = "cbxSangre";
+            this.cbxSangre.Size = new System.Drawing.Size(205, 24);
+            this.cbxSangre.TabIndex = 25;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.cbxSangre);
             this.Controls.Add(this.cbxGenero);
             this.Controls.Add(this.txtEdad);
             this.Controls.Add(this.btmVerificar);
             this.Controls.Add(this.btmSalir);
             this.Controls.Add(this.txtTriage);
             this.Controls.Add(this.lblTriage);
-            this.Controls.Add(this.txtSangre);
             this.Controls.Add(this.txtTelefono);
             this.Controls.Add(this.txtDireccion);
             this.Controls.Add(this.txtDui);
@@ -316,13 +321,13 @@ namespace Sistema_de_gestion_del_tiempo_y_demanda
         private System.Windows.Forms.TextBox txtDui;
         private System.Windows.Forms.TextBox txtDireccion;
         private System.Windows.Forms.TextBox txtTelefono;
-        private System.Windows.Forms.TextBox txtSangre;
         private System.Windows.Forms.TextBox txtTriage;
         private System.Windows.Forms.Label lblTriage;
         private System.Windows.Forms.Button btmSalir;
         private System.Windows.Forms.Button btmVerificar;
         private System.Windows.Forms.TextBox txtEdad;
         private System.Windows.Forms.ComboBox cbxGenero;
+        private System.Windows.Forms.ComboBox cbxSangre;
     }
 }
 

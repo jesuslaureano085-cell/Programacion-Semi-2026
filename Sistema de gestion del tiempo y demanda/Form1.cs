@@ -76,7 +76,7 @@ namespace Sistema_de_gestion_del_tiempo_y_demanda
             string dui = txtDui.Text;
             string direccion = txtDireccion.Text;
             string telefono = txtTelefono.Text;
-            string tipoSangre = txtSangre.Text;
+            string tipoSangre = cbxSangre.Text;
             string triaje = txtTriage.Text;
 
             if (string.IsNullOrWhiteSpace(nombreCompleto) && string.IsNullOrWhiteSpace(numeroExpediente) &&

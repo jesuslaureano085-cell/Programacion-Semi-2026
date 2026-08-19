@@ -14,6 +14,7 @@ namespace Trabajo_con_LINQ
     {
         public Form1()
         {
+
             InitializeComponent();
         }
 

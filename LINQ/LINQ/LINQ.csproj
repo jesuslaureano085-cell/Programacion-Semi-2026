@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F482FB81-437A-4323-B2DC-5874C595365B}</ProjectGuid>
+    <ProjectGuid>{86E32462-E0BF-4243-B8FA-F7BD15D5E754}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Proyecto_de_programacion</RootNamespace>
-    <AssemblyName>Proyecto de programacion</AssemblyName>
+    <RootNamespace>LINQ</RootNamespace>
+    <AssemblyName>LINQ</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

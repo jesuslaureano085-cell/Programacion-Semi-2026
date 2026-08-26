@@ -20,7 +20,7 @@ namespace ConversorUnidades
         {
             cdbOpciones.Items.Clear();
             cdbOpciones.Items.AddRange(new string[] {
-                "Monedas", "Masa", "Volumen", "Longitud", "Almacenamiento", "Tiempo"
+                "Monedas", "Masa", "Volumen", "Longitud", "Almacenamiento", "Tiempo", "Areas"
             });
             cdbOpciones.SelectedIndex = 0;
         }
@@ -79,6 +79,14 @@ namespace ConversorUnidades
                         "Meses", "Años", "Milisegundos", "Décadas", "Siglos"
                     };
                     break;
+
+                case "Areas":
+                    unidades = new string[] {
+        "Metros cuadrados", "Kilómetros cuadrados", "Centímetros cuadrados",
+        "Hectáreas", "Manzanas", "Varas cuadradas", "Millas cuadradas",
+        "Acres", "Pies cuadrados", "Pulgadas cuadradas"
+    };
+                    break;
             }
 
             cdbDe.Items.AddRange(unidades);
@@ -87,6 +95,29 @@ namespace ConversorUnidades
             if (cdbDe.Items.Count > 0) cdbDe.SelectedIndex = 0;
             if (cdbA.Items.Count > 1) cdbA.SelectedIndex = 1;
         }
+        private double ObtenerFactorAreas(string unidad)
+{
+    switch (unidad)
+    {
+        case "Metros cuadrados": return 1.0;
+        case "Kilómetros cuadrados": return 0.000001;
+        case "Centímetros cuadrados": return 10000.0;
+        case "Hectáreas": return 0.0001;
+        case "Manzanas": return 0.000142;
+        case "Varas cuadradas": return 1.19599;
+        case "Millas cuadradas": return 0.0000003861;
+        case "Acres": return 0.000247105;
+        case "Pies cuadrados": return 10.7639;
+        case "Pulgadas cuadradas": return 1550.0031;
+        default: return 1.0;
+    }
+}
+
+private double ConvertirAreas(double val, string de, string a)
+{
+    double enMetrosCuadrados = val / ObtenerFactorAreas(de);
+    return enMetrosCuadrados * ObtenerFactorAreas(a);
+}
 
         private void btnCalcular_Click(object sender, EventArgs e)
         {
@@ -126,6 +157,9 @@ namespace ConversorUnidades
                     break;
                 case "Tiempo":
                     resultado = ConvertirTiempo(cantidad, unidadDe, unidadA);
+                    break;
+                case "Areas":
+                    resultado = ConvertirAreas(cantidad, unidadDe, unidadA);
                     break;
             }
 

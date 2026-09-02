@@ -7,7 +7,7 @@ namespace Impuesto_Actividades_Economicas
 {
     public partial class Parcial_1 : Form
     {
-        // Estructura de cada tramo de la tabla
+  
         private class TramoIAE
         {
             public double Desde;
@@ -70,17 +70,16 @@ namespace Impuesto_Actividades_Economicas
 
                 if (activoImponible >= tramo.Desde && activoImponible <= tramo.Hasta)
                 {
-                    // Determina la base exacta restando el límite superior del tramo anterior
+                  
                     double baseARestar = (i == 0) ? 0 : tablaComercial[i - 1].Hasta;
                     double excedente = activoImponible - baseARestar;
 
-                    // Aplica "por millar o fracción" elevando al millar entero superior
-                    double fraccionMillar = Math.Ceiling(excedente / 1000.0);
-                    
-                    double impuestoVariable = fraccionMillar * tramo.FactorPorMillar;
+               
+                    double factorExcedente = excedente / 1000.0;
+
+                    double impuestoVariable = factorExcedente * tramo.FactorPorMillar;
                     double impuestoTotal = tramo.ImpuestoFijo + impuestoVariable;
 
-                    // Redondeo comercial exacto a dos decimales
                     impuestoTotal = Math.Round(impuestoTotal, 2, MidpointRounding.AwayFromZero);
 
                     string hastaTexto = tramo.Hasta == double.MaxValue ? "en adelante" : tramo.Hasta.ToString("N2");
@@ -102,7 +101,6 @@ namespace Impuesto_Actividades_Economicas
                 return;
             }
 
-            // Validaciones con soporte para puntos decimales sin importar el idioma de Windows
             if (!double.TryParse(txtCapitalDeclarado.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double activoImponible) || activoImponible < 0)
             {
                 MessageBox.Show("Ingrese un valor de activo imponible válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);

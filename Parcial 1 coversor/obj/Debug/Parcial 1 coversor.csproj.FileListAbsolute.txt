@@ -1,9 +1,0 @@
-C:\Users\jesus\source\repos\Parcial 1 coversor\bin\Debug\Parcial 1 coversor.exe.config
-C:\Users\jesus\source\repos\Parcial 1 coversor\bin\Debug\Parcial 1 coversor.exe
-C:\Users\jesus\source\repos\Parcial 1 coversor\bin\Debug\Parcial 1 coversor.pdb
-C:\Users\jesus\source\repos\Parcial 1 coversor\obj\Debug\Parcial 1 coversor.csproj.AssemblyReference.cache
-C:\Users\jesus\source\repos\Parcial 1 coversor\obj\Debug\Parcial_1_coversor.Properties.Resources.resources
-C:\Users\jesus\source\repos\Parcial 1 coversor\obj\Debug\Parcial 1 coversor.csproj.GenerateResource.cache
-C:\Users\jesus\source\repos\Parcial 1 coversor\obj\Debug\Parcial 1 coversor.csproj.CoreCompileInputs.cache
-C:\Users\jesus\source\repos\Parcial 1 coversor\obj\Debug\Parcial 1 coversor.exe
-C:\Users\jesus\source\repos\Parcial 1 coversor\obj\Debug\Parcial 1 coversor.pdb

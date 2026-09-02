@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Impuesto_Actividades_Economicas
@@ -61,17 +62,26 @@ namespace Impuesto_Actividades_Economicas
             dgvResultados.AllowUserToAddRows = false;
         }
 
-
         private double CalcularImpuesto(double activoImponible, out string tramoTexto)
         {
-            foreach (TramoIAE tramo in tablaComercial)
+            for (int i = 0; i < tablaComercial.Count; i++)
             {
+                TramoIAE tramo = tablaComercial[i];
+
                 if (activoImponible >= tramo.Desde && activoImponible <= tramo.Hasta)
                 {
-                    double excedente = activoImponible - tramo.Desde;
-                    double fraccionMillar = excedente / 1000.0;
+                    // Determina la base exacta restando el límite superior del tramo anterior
+                    double baseARestar = (i == 0) ? 0 : tablaComercial[i - 1].Hasta;
+                    double excedente = activoImponible - baseARestar;
+
+                    // Aplica "por millar o fracción" elevando al millar entero superior
+                    double fraccionMillar = Math.Ceiling(excedente / 1000.0);
+                    
                     double impuestoVariable = fraccionMillar * tramo.FactorPorMillar;
                     double impuestoTotal = tramo.ImpuestoFijo + impuestoVariable;
+
+                    // Redondeo comercial exacto a dos decimales
+                    impuestoTotal = Math.Round(impuestoTotal, 2, MidpointRounding.AwayFromZero);
 
                     string hastaTexto = tramo.Hasta == double.MaxValue ? "en adelante" : tramo.Hasta.ToString("N2");
                     tramoTexto = $"${tramo.Desde:N2} - ${hastaTexto}";
@@ -84,7 +94,6 @@ namespace Impuesto_Actividades_Economicas
             return 0;
         }
 
-
         private void btnCalcularImpuesto_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNombreNegocio.Text))
@@ -93,7 +102,8 @@ namespace Impuesto_Actividades_Economicas
                 return;
             }
 
-            if (!double.TryParse(txtCapitalDeclarado.Text, out double activoImponible) || activoImponible < 0)
+            // Validaciones con soporte para puntos decimales sin importar el idioma de Windows
+            if (!double.TryParse(txtCapitalDeclarado.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double activoImponible) || activoImponible < 0)
             {
                 MessageBox.Show("Ingrese un valor de activo imponible válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;

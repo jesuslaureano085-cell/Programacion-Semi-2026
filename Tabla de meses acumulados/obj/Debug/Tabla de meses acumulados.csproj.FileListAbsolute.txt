@@ -1,0 +1,10 @@
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tabla de meses acumulados\obj\Debug\Tabla de meses acumulados.csproj.AssemblyReference.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tabla de meses acumulados\obj\Debug\Tabla_de_meses_acumulados.Form1.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tabla de meses acumulados\obj\Debug\Tabla_de_meses_acumulados.Properties.Resources.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tabla de meses acumulados\obj\Debug\Tabla de meses acumulados.csproj.GenerateResource.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tabla de meses acumulados\obj\Debug\Tabla de meses acumulados.csproj.CoreCompileInputs.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tabla de meses acumulados\bin\Debug\Tabla de meses acumulados.exe.config
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tabla de meses acumulados\bin\Debug\Tabla de meses acumulados.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tabla de meses acumulados\bin\Debug\Tabla de meses acumulados.pdb
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tabla de meses acumulados\obj\Debug\Tabla de meses acumulados.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tabla de meses acumulados\obj\Debug\Tabla de meses acumulados.pdb

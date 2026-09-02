@@ -31,7 +31,7 @@ namespace Parcial_1_conversor
                 { "Vara Cuadrada",   0.698896   },
                 { "Yarda Cuadrada",  0.83612736 },
                 { "Metro Cuadrado",  1.0        },
-                { "Tareas",          698.896    },
+                { "Tareas",          436.81    },
                 { "Manzana",         6988.96    },
                 { "Hectárea",        10000.0    },
             };

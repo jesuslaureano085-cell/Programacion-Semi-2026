@@ -1,0 +1,10 @@
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Matrices-clase-17-8-2026\obj\Debug\Matrices-clase-17-8-2026.csproj.AssemblyReference.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Matrices-clase-17-8-2026\obj\Debug\Matrices_clase_17_8_2026.Form1.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Matrices-clase-17-8-2026\obj\Debug\Matrices_clase_17_8_2026.Properties.Resources.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Matrices-clase-17-8-2026\obj\Debug\Matrices-clase-17-8-2026.csproj.GenerateResource.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Matrices-clase-17-8-2026\obj\Debug\Matrices-clase-17-8-2026.csproj.CoreCompileInputs.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Matrices-clase-17-8-2026\bin\Debug\Matrices-clase-17-8-2026.exe.config
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Matrices-clase-17-8-2026\bin\Debug\Matrices-clase-17-8-2026.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Matrices-clase-17-8-2026\bin\Debug\Matrices-clase-17-8-2026.pdb
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Matrices-clase-17-8-2026\obj\Debug\Matrices-clase-17-8-2026.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Matrices-clase-17-8-2026\obj\Debug\Matrices-clase-17-8-2026.pdb

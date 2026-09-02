@@ -1,0 +1,10 @@
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Sistema de gestion del tiempo y demanda\obj\Debug\Sistema de gestion del tiempo y demanda.csproj.AssemblyReference.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Sistema de gestion del tiempo y demanda\obj\Debug\Sistema_de_gestion_del_tiempo_y_demanda.Form1.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Sistema de gestion del tiempo y demanda\obj\Debug\Sistema_de_gestion_del_tiempo_y_demanda.Properties.Resources.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Sistema de gestion del tiempo y demanda\obj\Debug\Sistema de gestion del tiempo y demanda.csproj.GenerateResource.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Sistema de gestion del tiempo y demanda\obj\Debug\Sistema de gestion del tiempo y demanda.csproj.CoreCompileInputs.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Sistema de gestion del tiempo y demanda\bin\Debug\Sistema de gestion del tiempo y demanda.exe.config
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Sistema de gestion del tiempo y demanda\bin\Debug\Sistema de gestion del tiempo y demanda.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Sistema de gestion del tiempo y demanda\bin\Debug\Sistema de gestion del tiempo y demanda.pdb
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Sistema de gestion del tiempo y demanda\obj\Debug\Sistema de gestion del tiempo y demanda.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Sistema de gestion del tiempo y demanda\obj\Debug\Sistema de gestion del tiempo y demanda.pdb

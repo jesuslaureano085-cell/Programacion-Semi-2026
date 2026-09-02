@@ -1,0 +1,10 @@
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tarifa de agua potable\bin\Debug\Tarifa de agua potable.exe.config
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tarifa de agua potable\bin\Debug\Tarifa de agua potable.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tarifa de agua potable\bin\Debug\Tarifa de agua potable.pdb
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tarifa de agua potable\obj\Debug\Tarifa de agua potable.csproj.AssemblyReference.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tarifa de agua potable\obj\Debug\Tarifa_de_agua_potable.Form1.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tarifa de agua potable\obj\Debug\Tarifa_de_agua_potable.Properties.Resources.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tarifa de agua potable\obj\Debug\Tarifa de agua potable.csproj.GenerateResource.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tarifa de agua potable\obj\Debug\Tarifa de agua potable.csproj.CoreCompileInputs.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tarifa de agua potable\obj\Debug\Tarifa de agua potable.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Tarifa de agua potable\obj\Debug\Tarifa de agua potable.pdb

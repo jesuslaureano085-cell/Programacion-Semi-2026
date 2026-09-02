@@ -1,0 +1,10 @@
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Parcial 1\obj\Debug\Parcial 1.csproj.AssemblyReference.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Parcial 1\obj\Debug\Parcial_1.Properties.Resources.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Parcial 1\obj\Debug\Parcial 1.csproj.GenerateResource.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Parcial 1\obj\Debug\Parcial 1.csproj.CoreCompileInputs.cache
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Parcial 1\bin\Debug\Parcial 1.exe.config
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Parcial 1\bin\Debug\Parcial 1.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Parcial 1\bin\Debug\Parcial 1.pdb
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Parcial 1\obj\Debug\Impuesto_Actividades_Economicas.Parcial_1.resources
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Parcial 1\obj\Debug\Parcial 1.exe
+C:\Users\jesus\source\repos\Programacion-Semi-2026\Parcial 1\obj\Debug\Parcial 1.pdb

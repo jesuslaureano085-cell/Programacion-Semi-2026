@@ -1,0 +1,15 @@
+# Carpetas de compilación de Visual Studio
+bin/
+obj/
+.vs/
+
+# Archivos de configuración personal de Visual Studio
+*.user
+*.suo
+
+# Log de bases de datos LocalDB (se regenera solo)
+*.ldf
+
+# Copias de respaldo y comprimidos
+*.zip
+_archivo/

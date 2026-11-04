@@ -17,6 +17,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Permite abrir los archivos de wwwroot (html, imágenes) desde el navegador
+app.UseStaticFiles();
+
 app.UseAuthorization();
 
 app.MapControllers();

@@ -1,24 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.Models
+namespace webapp.models
 {
     public class Alumnocs
     {
         [Key]
+        public int idAlumno { get; set; }
 
-        public int Id { get; set; }
+        public string codigo { get; set; } = string.Empty;
 
+        public string nombre { get; set; } = string.Empty;
 
-        public int codigo { get; set; }
+        public string direccion { get; set; } = string.Empty;
 
-        public int nombre { get; set; }
+        public string telefono { get; set; } = string.Empty;
 
-        public int direccion { get; set; }
-
-        public int telefono { get; set; }
-
-        public int casil { get; set; }
-
-
+        public string casil { get; set; } = string.Empty;
     }
 }

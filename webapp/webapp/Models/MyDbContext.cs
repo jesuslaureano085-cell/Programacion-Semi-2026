@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace webapp.models
+namespace webapp.Models
 {
     public class MyDbContext : DbContext
     {
@@ -8,12 +8,12 @@ namespace webapp.models
 
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options) { }
 
-        public DbSet<Alumnocs> Alumnos { get; set; }
+        public DbSet<Alumno> Alumnos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Alumnocs>().HasKey(a => a.idAlumno);
+            modelBuilder.Entity<Alumno>().HasKey(a => a.idAlumno);
         }
     }
 }

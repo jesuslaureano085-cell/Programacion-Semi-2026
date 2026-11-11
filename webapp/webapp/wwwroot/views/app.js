@@ -33,3 +33,9 @@ function abrirVentana(form) {
         })
         .catch(error => alertify.error(error.message));
 }
+
+async function obtenerAlumnos(buscar = '') {
+    const respuesta = await fetch(`/api/Alumnos/buscar?buscar=${encodeURIComponent(buscar)}`),
+        alumnos = await respuesta.json();
+    return alumnos;
+}

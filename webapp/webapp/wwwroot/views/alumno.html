@@ -45,23 +45,22 @@
             <div class="col-12 text-center">
                 <input type="submit" class="btn btn-outline-primary" value="Guardar" />
                 <input type="reset" class="btn btn-outline-warning" value="Nuevo" />
-                <!-- "Buscar" todavía no hace nada: lo hará la pantalla busqueda_alumno -->
                 <input type="button" class="btn btn-outline-success" value="Buscar" />
             </div>
         </div>
     </div>
 </form>
 <script>
-var accion = 'nuevo',   // 'nuevo' = crear (POST) | 'modificar' = editar (PUT)
+var accion = 'nuevo',
     idAlumno = 0;
 
 frmAlumno.addEventListener('submit', e => {
-    e.preventDefault();          // evita que la página se recargue
+    e.preventDefault();
     guardarAlumno();
 });
 
 frmAlumno.addEventListener('reset', () => {
-    accion = 'nuevo';            // botón "Nuevo": vuelve a modo crear
+    accion = 'nuevo';
     idAlumno = 0;
 });
 

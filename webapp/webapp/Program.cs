@@ -7,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-// Conecta el "puente" (MyDbContext) con SQL Server usando la cadena "DefaultConnection" de appsettings.json
 builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -24,7 +23,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Permite abrir los archivos de wwwroot (html, imágenes) desde el navegador
 app.UseStaticFiles();
 
 app.UseAuthorization();

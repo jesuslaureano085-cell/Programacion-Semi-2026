@@ -1,0 +1,99 @@
+<form id="frmBusquedaMateria">
+    <div class="card theme-secondary" style="min-width:600px;">
+        <div class="card-header">
+            <div class="d-flex">
+                Busqueda de Materias
+
+                <div class="ms-auto">
+                    <button data-form="busqueda_materia" type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table id="tblConsultaMaterias" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th colspan="4">
+                            <input type="search" class="form-control" placeholder="Buscar materias por codigo, nombre"
+                                   name="txtBuscarMateria" id="txtBuscarMateria" />
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>CODIGO</th>
+                        <th>NOMBRE</th>
+                        <th>UV</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<script>
+frmBusquedaMateria.addEventListener('submit', e => e.preventDefault());
+
+txtBuscarMateria.addEventListener('keyup', e => {
+    listarMaterias(txtBuscarMateria.value);
+});
+
+var materiasListadas = [];
+
+async function listarMaterias(buscar = '') {
+    materiasListadas = await obtenerMaterias(buscar);
+    let filas = '';
+    materiasListadas.forEach((materia, indice) => {
+        filas += `
+            <tr data-indice="${indice}" style="cursor:pointer">
+                <td>${escaparHtml(materia.codigo)}</td>
+                <td>${escaparHtml((materia.nombre || '').trim())}</td>
+                <td>${escaparHtml(materia.uv)}</td>
+                <td><input type="button" class="btn btn-outline-danger btn-sm btn-eliminar" value="DEL" /></td>
+            </tr>
+        `;
+    });
+    document.querySelector("#tblConsultaMaterias > tbody").innerHTML = filas;
+}
+
+document.querySelector("#tblConsultaMaterias > tbody").addEventListener('click', e => {
+    const fila = e.target.closest('tr');
+    if (!fila) return;
+
+    const materia = materiasListadas[fila.dataset.indice];
+    if (e.target.closest('.btn-eliminar')) {
+        eliminarMateria(materia);
+    } else {
+        mostrarDatosMateria(materia);
+    }
+});
+
+function mostrarDatosMateria(materia) {
+    abrirVentana('materia').then(abierta => {
+        if (abierta) {
+            modificarMateria(materia);
+        }
+    });
+}
+
+function eliminarMateria(materia) {
+    alertify.confirm(
+        'Eliminar materia',
+        `¿Está seguro de eliminar ${escaparHtml((materia.nombre || '').trim())}?`,
+        async () => {
+            const respuesta = await fetch(`/api/Materias/${materia.idMateria}`, { method: 'DELETE' });
+            if (!respuesta.ok) {
+                alertify.error(`No se pudo eliminar (error ${respuesta.status})`);
+                return;
+            }
+            alertify.success('Materia eliminada');
+            if (typeof idMateria !== 'undefined' && idMateria == materia.idMateria) {
+                nuevaMateria();
+            }
+            listarMaterias(txtBuscarMateria.value);
+        },
+        () => { }
+    ).set('labels', { ok: 'Sí, eliminar', cancel: 'Cancelar' });
+}
+
+listarMaterias();
+</script>

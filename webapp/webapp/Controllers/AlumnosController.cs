@@ -15,14 +15,12 @@ namespace webapp.Controllers
             _context = context;
         }
 
-        // GET: api/Alumnos
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Alumno>>> GetAlumnos()
         {
             return await _context.Alumnos.ToListAsync();
         }
 
-        // GET: api/Alumnos/buscar?buscar=texto
         [HttpGet("buscar")]
         public async Task<ActionResult<IEnumerable<Alumno>>> BuscarAlumno([FromQuery] AlumnoBusquedaParametros parametros)
         {
@@ -37,7 +35,6 @@ namespace webapp.Controllers
             return await consulta.ToListAsync();
         }
 
-        // GET: api/Alumnos/5
         [HttpGet("{idalumno}")]
         public async Task<ActionResult<Alumno>> GetAlumno(int idalumno)
         {
@@ -51,7 +48,6 @@ namespace webapp.Controllers
             return alumno;
         }
 
-        // PUT: api/Alumnos/5
         [HttpPut("{idalumno}")]
         public async Task<IActionResult> PutAlumno(int idalumno, Alumno alumno)
         {
@@ -78,7 +74,6 @@ namespace webapp.Controllers
             return NoContent();
         }
 
-        // POST: api/Alumnos
         [HttpPost]
         public async Task<ActionResult<Alumno>> PostAlumno(Alumno alumno)
         {
@@ -88,7 +83,6 @@ namespace webapp.Controllers
             return CreatedAtAction(nameof(GetAlumno), new { idalumno = alumno.idAlumno }, alumno);
         }
 
-        // DELETE: api/Alumnos/5
         [HttpDelete("{idalumno}")]
         public async Task<IActionResult> DeleteAlumno(int idalumno)
         {

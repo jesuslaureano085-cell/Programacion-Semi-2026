@@ -48,6 +48,19 @@ function refrescarBusquedaAlumnos() {
     }
 }
 
+async function obtenerMaterias(buscar = '') {
+    const respuesta = await fetch(`/api/Materias/buscar?buscar=${encodeURIComponent(buscar)}`),
+        materias = await respuesta.json();
+    return materias;
+}
+
+function refrescarBusquedaMaterias() {
+    const txtBuscar = document.getElementById('txtBuscarMateria');
+    if (txtBuscar && typeof listarMaterias === 'function') {
+        listarMaterias(txtBuscar.value);
+    }
+}
+
 function escaparHtml(texto) {
     return String(texto ?? '').replace(/[&<>"']/g, c => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'

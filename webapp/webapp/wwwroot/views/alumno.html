@@ -59,9 +59,9 @@ frmAlumno.addEventListener('submit', e => {
     guardarAlumno();
 });
 
-frmAlumno.addEventListener('reset', () => {
-    accion = 'nuevo';
-    idAlumno = 0;
+frmAlumno.addEventListener('reset', e => {
+    e.preventDefault();
+    nuevoAlumno();
 });
 
 async function guardarAlumno() {
@@ -92,10 +92,32 @@ async function guardarAlumno() {
             throw new Error(`el servidor respondió ${respuesta.status}`);
         }
 
-        alertify.success('Alumno guardado correctamente');
-        frmAlumno.reset();
+        alertify.success(accion == 'modificar' ? 'Alumno modificado correctamente' : 'Alumno guardado correctamente');
+        nuevoAlumno();
+        refrescarBusquedaAlumnos();
     } catch (error) {
         alertify.error(`No se pudo guardar: ${error.message}`);
     }
+}
+
+function nuevoAlumno() {
+    accion = 'nuevo';
+    idAlumno = 0;
+    txtCodigoAlumno.value = '';
+    txtNombreAlumno.value = '';
+    txtDireccionAlumno.value = '';
+    txtTelefonoAlumno.value = '';
+    txtEmailAlumno.value = '';
+    txtCodigoAlumno.focus();
+}
+
+function modificarAlumno(alumno) {
+    accion = 'modificar';
+    idAlumno = alumno.idAlumno;
+    txtCodigoAlumno.value = alumno.codigo;
+    txtNombreAlumno.value = alumno.nombre;
+    txtDireccionAlumno.value = alumno.direccion;
+    txtTelefonoAlumno.value = alumno.telefono;
+    txtEmailAlumno.value = alumno.email;
 }
 </script>

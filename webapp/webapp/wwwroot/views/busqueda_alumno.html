@@ -39,22 +39,64 @@ txtBuscarAlumno.addEventListener('keyup', e => {
     listarAlumnos(txtBuscarAlumno.value);
 });
 
+var alumnosListados = [];
+
 async function listarAlumnos(buscar = '') {
-    let alumnos = await obtenerAlumnos(buscar),
-        filas = '';
-    alumnos.forEach(alumno => {
+    alumnosListados = await obtenerAlumnos(buscar);
+    let filas = '';
+    alumnosListados.forEach((alumno, indice) => {
         filas += `
-            <tr>
-                <td>${alumno.codigo}</td>
-                <td>${alumno.nombre}</td>
-                <td>${alumno.direccion}</td>
-                <td>${alumno.telefono}</td>
-                <td>${alumno.email}</td>
-                <td></td>
+            <tr data-indice="${indice}" style="cursor:pointer">
+                <td>${escaparHtml(alumno.codigo)}</td>
+                <td>${escaparHtml(alumno.nombre)}</td>
+                <td>${escaparHtml(alumno.direccion)}</td>
+                <td>${escaparHtml(alumno.telefono)}</td>
+                <td>${escaparHtml(alumno.email)}</td>
+                <td><input type="button" class="btn btn-outline-danger btn-sm btn-eliminar" value="DEL" /></td>
             </tr>
         `;
     });
     document.querySelector("#tblConsultaAlumnos > tbody").innerHTML = filas;
+}
+
+document.querySelector("#tblConsultaAlumnos > tbody").addEventListener('click', e => {
+    const fila = e.target.closest('tr');
+    if (!fila) return;
+
+    const alumno = alumnosListados[fila.dataset.indice];
+    if (e.target.closest('.btn-eliminar')) {
+        eliminarAlumno(alumno);
+    } else {
+        mostrarDatosAlumno(alumno);
+    }
+});
+
+function mostrarDatosAlumno(alumno) {
+    abrirVentana('alumno').then(abierta => {
+        if (abierta) {
+            modificarAlumno(alumno);
+        }
+    });
+}
+
+function eliminarAlumno(alumno) {
+    alertify.confirm(
+        'Eliminar alumno',
+        `¿Está seguro de eliminar a ${escaparHtml(alumno.nombre.trim())}?`,
+        async () => {
+            const respuesta = await fetch(`/api/Alumnos/${alumno.idAlumno}`, { method: 'DELETE' });
+            if (!respuesta.ok) {
+                alertify.error(`No se pudo eliminar (error ${respuesta.status})`);
+                return;
+            }
+            alertify.success('Alumno eliminado');
+            if (typeof idAlumno !== 'undefined' && idAlumno == alumno.idAlumno) {
+                nuevoAlumno();
+            }
+            listarAlumnos(txtBuscarAlumno.value);
+        },
+        () => { }
+    ).set('labels', { ok: 'Sí, eliminar', cancel: 'Cancelar' });
 }
 
 listarAlumnos();

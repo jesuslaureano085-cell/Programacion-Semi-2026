@@ -1,0 +1,105 @@
+<form id="frmBusquedaDocente">
+    <div class="card theme-secondary" style="min-width:700px;">
+        <div class="card-header">
+            <div class="d-flex">
+                Busqueda de Docentes
+
+                <div class="ms-auto">
+                    <button data-form="busqueda_docente" type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table id="tblConsultaDocentes" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th colspan="7">
+                            <input type="search" class="form-control" placeholder="Buscar docentes por codigo, nombre"
+                                   name="txtBuscarDocente" id="txtBuscarDocente" />
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>CODIGO</th>
+                        <th>NOMBRE</th>
+                        <th>DIRECCION</th>
+                        <th>TELEFONO</th>
+                        <th>EMAIL</th>
+                        <th>ESCALAFON</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<script>
+frmBusquedaDocente.addEventListener('submit', e => e.preventDefault());
+
+txtBuscarDocente.addEventListener('keyup', e => {
+    listarDocentes(txtBuscarDocente.value);
+});
+
+var docentesListados = [];
+
+async function listarDocentes(buscar = '') {
+    docentesListados = await obtenerDatos(buscar, 'Docentes');
+    let filas = '';
+    docentesListados.forEach((docente, indice) => {
+        filas += `
+            <tr data-indice="${indice}" style="cursor:pointer">
+                <td>${escaparHtml(docente.codigo)}</td>
+                <td>${escaparHtml(docente.nombre)}</td>
+                <td>${escaparHtml(docente.direccion)}</td>
+                <td>${escaparHtml(docente.telefono)}</td>
+                <td>${escaparHtml(docente.email)}</td>
+                <td>${escaparHtml(docente.escalafon)}</td>
+                <td><input type="button" class="btn btn-outline-danger btn-sm btn-eliminar" value="DEL" /></td>
+            </tr>
+        `;
+    });
+    document.querySelector("#tblConsultaDocentes > tbody").innerHTML = filas;
+}
+
+document.querySelector("#tblConsultaDocentes > tbody").addEventListener('click', e => {
+    const fila = e.target.closest('tr');
+    if (!fila) return;
+
+    const docente = docentesListados[fila.dataset.indice];
+    if (e.target.closest('.btn-eliminar')) {
+        eliminarDocente(docente);
+    } else {
+        mostrarDatosDocente(docente);
+    }
+});
+
+function mostrarDatosDocente(docente) {
+    abrirVentana('docente').then(abierta => {
+        if (abierta) {
+            modificarDocente(docente);
+        }
+    });
+}
+
+function eliminarDocente(docente) {
+    alertify.confirm(
+        'Eliminar docente',
+        `¿Está seguro de eliminar a ${escaparHtml((docente.nombre || '').trim())}?`,
+        async () => {
+            const respuesta = await fetch(`/api/Docentes/${docente.idDocente}`, { method: 'DELETE' });
+            if (!respuesta.ok) {
+                alertify.error(`No se pudo eliminar (error ${respuesta.status})`);
+                return;
+            }
+            alertify.success('Docente eliminado');
+            if (typeof idDocente !== 'undefined' && idDocente == docente.idDocente) {
+                nuevoDocente();
+            }
+            listarDocentes(txtBuscarDocente.value);
+        },
+        () => { }
+    ).set('labels', { ok: 'Sí, eliminar', cancel: 'Cancelar' });
+}
+
+listarDocentes();
+</script>

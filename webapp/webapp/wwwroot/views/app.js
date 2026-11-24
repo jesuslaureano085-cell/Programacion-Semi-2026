@@ -35,10 +35,14 @@ function abrirVentana(form) {
         });
 }
 
+async function obtenerDatos(buscar = '', form = 'Alumnos') {
+    const respuesta = await fetch(`/api/${form}/buscar?buscar=${encodeURIComponent(buscar)}`),
+        datos = await respuesta.json();
+    return datos;
+}
+
 async function obtenerAlumnos(buscar = '') {
-    const respuesta = await fetch(`/api/Alumnos/buscar?buscar=${encodeURIComponent(buscar)}`),
-        alumnos = await respuesta.json();
-    return alumnos;
+    return obtenerDatos(buscar, 'Alumnos');
 }
 
 function refrescarBusquedaAlumnos() {
@@ -49,15 +53,24 @@ function refrescarBusquedaAlumnos() {
 }
 
 async function obtenerMaterias(buscar = '') {
-    const respuesta = await fetch(`/api/Materias/buscar?buscar=${encodeURIComponent(buscar)}`),
-        materias = await respuesta.json();
-    return materias;
+    return obtenerDatos(buscar, 'Materias');
 }
 
 function refrescarBusquedaMaterias() {
     const txtBuscar = document.getElementById('txtBuscarMateria');
     if (txtBuscar && typeof listarMaterias === 'function') {
         listarMaterias(txtBuscar.value);
+    }
+}
+
+async function obtenerDocentes(buscar = '') {
+    return obtenerDatos(buscar, 'Docentes');
+}
+
+function refrescarBusquedaDocentes() {
+    const txtBuscar = document.getElementById('txtBuscarDocente');
+    if (txtBuscar && typeof listarDocentes === 'function') {
+        listarDocentes(txtBuscar.value);
     }
 }
 

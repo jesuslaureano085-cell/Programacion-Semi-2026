@@ -1,0 +1,51 @@
+﻿@model MonitorVentas.Models.Venta
+@{
+    ViewData["Title"] = $"Ticket {Model.VentaId}";
+    var devoluciones = ViewData["Devoluciones"] as List<MonitorVentas.Models.DevolucionResumen> ?? new();
+}
+
+<div class="page-header no-imprimir">
+    <div>
+        <h1>Venta #@Model.VentaId</h1>
+        <p>@(Model.Anulada ? "Esta venta fue anulada; su stock ya fue devuelto." : "Venta registrada.")</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <a asp-action="Create" class="btn btn-primary">+ Nueva venta</a>
+        <button type="button" class="btn" onclick="window.print()">Imprimir</button>
+        @if (!Model.Anulada)
+        {
+            <a asp-controller="Devoluciones" asp-action="Create" asp-route-ventaId="@Model.VentaId" class="btn">Registrar devolución</a>
+            @if (!devoluciones.Any())
+            {
+                <a asp-action="Anular" asp-route-id="@Model.VentaId" class="btn btn-outline-danger">Anular venta</a>
+            }
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary">Historial</a>
+    </div>
+</div>
+
+<partial name="_Ticket" model="Model" />
+
+@if (devoluciones.Any())
+{
+    <div class="panel mt-3 no-imprimir" style="max-width: 560px; margin: 0 auto;">
+        <div class="fw-bold mb-2">Devoluciones de esta venta</div>
+        <table class="table align-middle mb-2">
+            @foreach (var d in devoluciones)
+            {
+                <tr>
+                    <td class="mono">#@d.DevolucionId</td>
+                    <td>@d.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@d.Motivo</td>
+                    <td class="text-end">@d.Unidades u.</td>
+                    <td class="text-end">-@d.Total.ToString("C")</td>
+                    <td class="text-end"><a asp-controller="Devoluciones" asp-action="Details" asp-route-id="@d.DevolucionId" class="btn btn-sm btn-outline-primary">Ver</a></td>
+                </tr>
+            }
+        </table>
+        <div class="d-flex justify-content-between">
+            <span>Total neto (venta − devoluciones)</span>
+            <b>@((Model.Total - devoluciones.Sum(d => d.Total)).ToString("C"))</b>
+        </div>
+    </div>
+}

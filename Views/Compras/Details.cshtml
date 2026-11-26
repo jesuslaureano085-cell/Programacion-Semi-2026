@@ -1,0 +1,22 @@
+﻿@model MonitorVentas.Models.Compra
+@{
+    ViewData["Title"] = $"Compra {Model.CompraId}";
+}
+
+<div class="page-header no-imprimir">
+    <div>
+        <h1>Compra #@Model.CompraId</h1>
+        <p>@(Model.Anulada ? "Esta compra fue anulada; sus unidades se retiraron del inventario." : "Compra registrada; sus unidades ya están en el inventario.")</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <a asp-action="Create" class="btn btn-primary">+ Nueva compra</a>
+        <button type="button" class="btn" onclick="window.print()">Imprimir</button>
+        @if (!Model.Anulada)
+        {
+            <a asp-action="Anular" asp-route-id="@Model.CompraId" class="btn btn-outline-danger">Anular compra</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary">Historial</a>
+    </div>
+</div>
+
+<partial name="_Comprobante" model="Model" />

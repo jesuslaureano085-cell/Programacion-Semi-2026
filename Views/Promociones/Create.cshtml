@@ -1,0 +1,29 @@
+﻿@model MonitorVentas.Models.Promocion
+@{
+    ViewData["Title"] = "Nueva promoción";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Nueva promoción</h1>
+        <p>Si un producto tiene varias promociones vigentes, la caja usa la de mayor descuento.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-9">
+        <div class="panel">
+            <form asp-action="Create" method="post" novalidate>
+                <partial name="_Formulario" model="Model" />
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

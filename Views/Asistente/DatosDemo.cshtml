@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Datos de demostración";
+    var bloqueo = ViewData["Bloqueo"] as string;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Datos de demostración</h1>
+        <p>Historial de ventas para que el Asistente IA y los reportes tengan de dónde aprender.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Volver al asistente</a>
+</div>
+
+<div class="panel" style="max-width: 720px">
+    <p>Se crearán, para los <b>@ViewData["Productos"] productos</b> registrados:</p>
+    <ul>
+        <li><b>Ventas de los últimos 90 días</b> (entre 6 y 11 tickets por día), con más movimiento los fines de semana
+            y una leve tendencia a crecer, para que el modelo de IA encuentre patrones.</li>
+        <li><b>Compras semanales</b> a cada proveedor que reponen exactamente lo vendido.
+            Sus facturas empiezan con <span class="mono">DEMO-</span>.</li>
+    </ul>
+    <p>El <b>stock actual</b> de los productos <b>no cambia</b>, y las ventas de hoy tampoco.</p>
+
+    @if (bloqueo != null)
+    {
+        <div class="alert alert-warning mb-0">@bloqueo</div>
+    }
+    else
+    {
+        <div class="alert alert-warning">Esta acción solo se puede hacer <b>una vez</b> y no se deshace.</div>
+        <form asp-action="DatosDemo" method="post" class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Generar datos de demostración</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    }
+</div>

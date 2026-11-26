@@ -1,0 +1,109 @@
+﻿@model MonitorVentas.Models.CompraFormulario
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Nueva compra";
+    var productosJson = JsonSerializer.Serialize(ViewData["Productos"]);
+    var lineasJson = JsonSerializer.Serialize(Model.Lineas);
+}
+
+<div class="page-header">
+    <div>
+        <h1>Nueva compra</h1>
+        <p>Registre la factura del proveedor. Al guardar, el stock de cada producto <strong>sube</strong>.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Historial de compras</a>
+</div>
+
+<form asp-action="Create" method="post" id="form-compra" novalidate>
+    <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+    @if (ViewData["Sugerida"] is string sugerida)
+    {
+        <div class="alert alert-info ia-aviso" role="status"><b>Asistente IA:</b> @sugerida</div>
+    }
+
+    <fieldset class="panel mb-3">
+        <legend class="grupo-titulo">Datos de la factura</legend>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="ProveedorId" class="form-label req"></label>
+                <select asp-for="ProveedorId" class="form-select" asp-items="@(ViewData["Proveedores"] as SelectList)">
+                    <option value="0">-- Seleccione --</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="NumeroFactura" class="form-label req"></label>
+                <input asp-for="NumeroFactura" class="form-control mono" placeholder="Ej.: F-001234" autocomplete="off" maxlength="30" />
+            </div>
+            <div class="col-md-5">
+                <label asp-for="EmpleadoId" class="form-label req"></label>
+                <select asp-for="EmpleadoId" class="form-select" asp-items="@(ViewData["Empleados"] as SelectList)">
+                    <option value="0">-- Seleccione --</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label asp-for="Observacion" class="form-label"></label>
+                <input asp-for="Observacion" class="form-control" autocomplete="off" />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="panel mb-3">
+        <legend class="grupo-titulo">Agregar producto</legend>
+        <div class="row g-2 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label" for="pc-producto">Producto del proveedor</label>
+                <input id="pc-producto" class="form-control" list="pc-lista" autocomplete="off" placeholder="Primero elija el proveedor" />
+                <datalist id="pc-lista"></datalist>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="pc-cantidad">Cantidad</label>
+                <input id="pc-cantidad" class="form-control" type="number" min="1" step="1" value="1" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="pc-costo">Costo unitario</label>
+                <input id="pc-costo" class="form-control" type="number" min="0.01" step="0.01" placeholder="0.00" />
+            </div>
+            <div class="col-md-3">
+                <button type="button" id="pc-agregar" class="btn btn-primary w-100">Agregar</button>
+            </div>
+        </div>
+        <div id="pc-info" class="form-text">&nbsp;</div>
+        <div id="pc-error" class="text-danger small" role="alert"></div>
+    </fieldset>
+
+    <div class="panel panel-flush mb-3">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-end">Stock actual</th>
+                        <th class="text-center" style="width: 110px">Cantidad</th>
+                        <th class="text-center" style="width: 130px">Costo unitario</th>
+                        <th class="text-end">Subtotal</th>
+                        <th class="text-end" style="width: 80px"></th>
+                    </tr>
+                </thead>
+                <tbody id="pc-lineas">
+                    <tr class="fila-vacia">
+                        <td colspan="6" class="text-center text-muted py-4">Todavía no hay productos en la compra.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end align-items-center gap-3">
+        <div class="resumen-caja" style="min-width: 260px"><span id="pc-resumen">0 unidades</span><b id="pc-total">$0.00</b></div>
+        <button type="submit" class="btn btn-primary" id="pc-guardar">Registrar compra</button>
+    </div>
+
+    <div id="pc-ocultos"></div>
+</form>
+
+<script id="pc-datos" type="application/json">@Html.Raw(productosJson)</script>
+<script id="pc-iniciales" type="application/json">@Html.Raw(lineasJson)</script>
+
+@section Scripts {
+    <script src="~/js/compras.js" asp-append-version="true"></script>
+}

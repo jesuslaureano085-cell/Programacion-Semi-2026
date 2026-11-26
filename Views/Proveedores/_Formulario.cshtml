@@ -1,0 +1,35 @@
+﻿@model MonitorVentas.Models.Proveedor
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+<div class="mb-3">
+    <label asp-for="Nombre" class="form-label req"></label>
+    <input asp-for="Nombre" class="form-control" placeholder="Ej.: Distribuidora La Central" autocomplete="off" autofocus />
+    <span asp-validation-for="Nombre" class="text-danger small"></span>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="mb-3">
+    <label asp-for="Contacto" class="form-label"></label>
+    <input asp-for="Contacto" class="form-control" placeholder="Nombre de la persona" autocomplete="off" />
+    <span asp-validation-for="Contacto" class="text-danger small"></span>
+</div>
+</div>
+<div class="col-md-6">
+<div class="mb-3">
+    <label asp-for="Telefono" class="form-label req"></label>
+    <input asp-for="Telefono" class="form-control" placeholder="Ej.: 2222-0000" autocomplete="off" />
+    <span asp-validation-for="Telefono" class="text-danger small"></span>
+</div>
+</div>
+</div>
+<div class="mb-3">
+    <label asp-for="Correo" class="form-label"></label>
+    <input asp-for="Correo" class="form-control" type="email" placeholder="ventas@empresa.com" autocomplete="off" />
+    <span asp-validation-for="Correo" class="text-danger small"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Direccion" class="form-label"></label>
+    <input asp-for="Direccion" class="form-control" autocomplete="off" />
+    <span asp-validation-for="Direccion" class="text-danger small"></span>
+</div>

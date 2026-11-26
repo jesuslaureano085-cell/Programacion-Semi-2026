@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monitor · @ViewData["Title"]</title>
+    <script>
+        // Si la animación de arranque ya se vio en esta sesión (o el usuario
+        // pidió menos movimiento en su sistema), se oculta antes de pintar.
+        // "arrancando" deja el escritorio escondido para que entre por partes.
+        try {
+            if (sessionStorage.getItem('mv-arranque-visto') ||
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.documentElement.classList.add('sin-arranque');
+            } else {
+                document.documentElement.classList.add('arrancando');
+            }
+        } catch (e) { document.documentElement.classList.add('sin-arranque'); }
+    </script>
+    <link rel="stylesheet" href="~/css/escritorio.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/moni.css" asp-append-version="true" />
+</head>
+<body class="escritorio-body">
+    @RenderBody()
+
+    <script src="~/js/arranque.js" asp-append-version="true"></script>
+    <script src="~/js/escritorio.js" asp-append-version="true"></script>
+    <script src="~/js/moni-guias.js" asp-append-version="true"></script>
+    <script src="~/js/moni.js" asp-append-version="true"></script>
+    <script src="~/js/apagado.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

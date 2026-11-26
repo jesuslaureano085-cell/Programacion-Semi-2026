@@ -1,0 +1,69 @@
+﻿@model MonitorVentas.Models.Producto
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+@if (!((ViewData["Categorias"] as SelectList)?.Any() ?? false) || !((ViewData["Proveedores"] as SelectList)?.Any() ?? false))
+{
+    <div class="alert alert-warning">
+        Para registrar productos primero debe existir al menos una <strong>categoría</strong> y un <strong>proveedor</strong>.
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label req"></label>
+            <input asp-for="Nombre" class="form-control" placeholder="Ej.: Arroz blanco 1 lb" autocomplete="off" autofocus />
+            <span asp-validation-for="Nombre" class="text-danger small"></span>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <label asp-for="Codigo" class="form-label"></label>
+            <input asp-for="Codigo" class="form-control mono" placeholder="13 dígitos" maxlength="13" inputmode="numeric" autocomplete="off" data-formato="digitos" />
+            <span asp-validation-for="Codigo" class="text-danger small"></span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label asp-for="CategoriaId" class="form-label req"></label>
+            <select asp-for="CategoriaId" class="form-select" asp-items="@(ViewData["Categorias"] as SelectList)">
+                <option value="0">-- Seleccione --</option>
+            </select>
+            <span asp-validation-for="CategoriaId" class="text-danger small"></span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label asp-for="ProveedorId" class="form-label req"></label>
+            <select asp-for="ProveedorId" class="form-select" asp-items="@(ViewData["Proveedores"] as SelectList)">
+                <option value="0">-- Seleccione --</option>
+            </select>
+            <span asp-validation-for="ProveedorId" class="text-danger small"></span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label asp-for="Precio" class="form-label req"></label>
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input asp-for="Precio" class="form-control" type="number" step="0.01" min="0.01" max="999999.99" placeholder="0.00" />
+            </div>
+            <span asp-validation-for="Precio" class="text-danger small"></span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label asp-for="Stock" class="form-label req"></label>
+            <input asp-for="Stock" class="form-control" type="number" step="1" min="0" />
+            <span asp-validation-for="Stock" class="text-danger small"></span>
+            <div class="form-text">Unidades disponibles en este momento.</div>
+        </div>
+    </div>
+</div>

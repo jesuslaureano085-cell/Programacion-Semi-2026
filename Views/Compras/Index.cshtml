@@ -1,0 +1,81 @@
+﻿@model IEnumerable<MonitorVentas.Models.CompraResumen>
+@{
+    ViewData["Title"] = "Compras a proveedores";
+    var periodo = ViewData["Periodo"] as string ?? "todas";
+    var validas = Model.Where(c => !c.Anulada).ToList();
+}
+
+<div class="page-header">
+    <div>
+        <h1>Compras a proveedores</h1>
+        <p>Mercadería recibida. Cada compra sube el stock de sus productos.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">+ Nueva compra</a>
+</div>
+
+<form asp-action="Index" method="get" class="mb-3" role="search">
+    <div class="input-group">
+        <label class="input-group-text" for="buscar">Buscar:</label>
+        <input type="search" name="buscar" id="buscar" value="@ViewData["Buscar"]" class="form-control"
+               placeholder="N.º de compra, factura, proveedor o empleado..." autocomplete="off"
+               data-filtrar="#tabla" data-contador="#contador" data-entidad="compras" />
+        <label class="input-group-text" for="periodo">Período:</label>
+        <select name="periodo" id="periodo" class="form-select" style="max-width: 170px" onchange="this.form.submit()">
+            <option value="hoy" selected="@(periodo == "hoy")">Hoy</option>
+            <option value="semana" selected="@(periodo == "semana")">Últimos 7 días</option>
+            <option value="mes" selected="@(periodo == "mes")">Este mes</option>
+            <option value="todas" selected="@(periodo == "todas")">Todas</option>
+        </select>
+        <button type="submit" class="btn btn-outline-secondary">Buscar</button>
+    </div>
+    <div class="form-text" id="contador"></div>
+</form>
+
+<div class="row g-2 mb-3">
+    <div class="col-sm-4"><div class="resumen-caja"><span>Compras</span><b>@validas.Count</b></div></div>
+    <div class="col-sm-4"><div class="resumen-caja"><span>Unidades recibidas</span><b>@validas.Sum(c => c.Unidades)</b></div></div>
+    <div class="col-sm-4"><div class="resumen-caja"><span>Total comprado</span><b>@validas.Sum(c => c.Total).ToString("C")</b></div></div>
+</div>
+
+<div class="panel panel-flush">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle" id="tabla">
+            <thead>
+                <tr>
+                    <th>N.º</th>
+                    <th>Fecha</th>
+                    <th>Proveedor</th>
+                    <th>Factura</th>
+                    <th>Recibido por</th>
+                    <th class="text-end">Unidades</th>
+                    <th class="text-end">Total</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr class="@(c.Anulada ? "fila-anulada" : "")">
+                        <td class="mono">#@c.CompraId</td>
+                        <td>@c.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@c.Proveedor</td>
+                        <td class="mono">@c.NumeroFactura</td>
+                        <td>@c.RecibidoPor</td>
+                        <td class="text-end">@c.Unidades</td>
+                        <td class="text-end">@c.Total.ToString("C")</td>
+                        <td><span class="estado @(c.Anulada ? "no" : "si")">@(c.Anulada ? "Anulada" : "Válida")</span></td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Details" asp-route-id="@c.CompraId" class="btn btn-sm btn-outline-primary">Ver</a>
+                        </td>
+                    </tr>
+                }
+                <tr class="fila-vacia @(Model.Any() ? "d-none" : "")">
+                    <td colspan="9" class="text-center text-muted py-4">
+                        @(ViewData["Buscar"] != null ? "No hay compras que coincidan con la búsqueda." : "No hay compras en este período.")
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+﻿@model MonitorVentas.Models.Compra
+
+<div class="comprobante @(Model.Anulada ? "anulada" : "")">
+    @if (Model.Anulada)
+    {
+        <div class="sello">ANULADA</div>
+    }
+    <div class="row g-2 mb-2">
+        <div class="col-sm-6">
+            <div class="text-muted small">Proveedor</div>
+            <div class="fw-bold">@Model.Proveedor?.Nombre</div>
+        </div>
+        <div class="col-sm-3">
+            <div class="text-muted small">Factura</div>
+            <div class="mono">@Model.NumeroFactura</div>
+        </div>
+        <div class="col-sm-3">
+            <div class="text-muted small">Fecha</div>
+            <div>@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</div>
+        </div>
+        <div class="col-sm-6">
+            <div class="text-muted small">Recibido por</div>
+            <div>@Model.Empleado?.Nombre</div>
+        </div>
+        <div class="col-sm-6">
+            <div class="text-muted small">Observación</div>
+            <div>@(Model.Observacion ?? "—")</div>
+        </div>
+    </div>
+    <div class="panel panel-flush">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th class="text-end">Cantidad</th>
+                    <th class="text-end">Costo unitario</th>
+                    <th class="text-end">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var d in Model.Detalles.OrderBy(d => d.DetalleCompraId))
+                {
+                    <tr>
+                        <td>@d.Producto?.Nombre</td>
+                        <td class="text-end">@d.Cantidad</td>
+                        <td class="text-end">@d.CostoUnitario.ToString("C")</td>
+                        <td class="text-end">@d.Subtotal.ToString("C")</td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="3" class="text-end fw-bold">TOTAL</td>
+                    <td class="text-end fw-bold">@Model.Total.ToString("C")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+﻿@model MonitorVentas.Models.Categoria
+@{
+    ViewData["Title"] = "Editar categoría";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Editar categoría</h1>
+        <p>Registro #@Model.CategoriaId · los campos con * son obligatorios.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-xl-7">
+        <div class="panel">
+            <form asp-action="Edit" asp-route-id="@Model.CategoriaId" method="post" novalidate>
+                <input type="hidden" asp-for="CategoriaId" />
+                <partial name="_Formulario" model="Model" />
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

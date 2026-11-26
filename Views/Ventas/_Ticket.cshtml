@@ -1,0 +1,44 @@
+﻿@model MonitorVentas.Models.Venta
+
+<div class="ticket @(Model.Anulada ? "anulada" : "")">
+    @if (Model.Anulada)
+    {
+        <div class="sello">ANULADA</div>
+    }
+    <div class="ticket-cabecera">
+        <div class="ticket-marca">MONITOR</div>
+        <div>Supermercado · Sistema de ventas</div>
+        <div class="ticket-linea"></div>
+        <div>Ticket N.º @Model.VentaId.ToString("D6")</div>
+        <div>@Model.Fecha.ToString("dd/MM/yyyy  HH:mm")</div>
+        <div>Cajero: @Model.Empleado?.Nombre</div>
+        <div>Cliente: @(Model.Cliente?.Nombre ?? "Consumidor final")</div>
+        <div>Pago: @Model.MetodoPago?.Nombre</div>
+        <div class="ticket-linea"></div>
+    </div>
+    <table class="ticket-tabla">
+        @foreach (var d in Model.Detalles.OrderBy(d => d.DetalleVentaId))
+        {
+            <tr>
+                <td colspan="2">
+                    @d.Producto?.Nombre
+                    @if (d.DescuentoPorcentaje > 0)
+                    {
+                        <span class="ticket-promo">PROMO -@d.DescuentoPorcentaje%</span>
+                    }
+                </td>
+            </tr>
+            <tr class="ticket-sub">
+                <td>@d.Cantidad x @d.PrecioUnitario.ToString("C")</td>
+                <td class="text-end">@d.Subtotal.ToString("C")</td>
+            </tr>
+        }
+    </table>
+    <div class="ticket-linea"></div>
+    <div class="ticket-total">
+        <span>TOTAL</span>
+        <span>@Model.Total.ToString("C")</span>
+    </div>
+    <div class="ticket-linea"></div>
+    <div class="ticket-pie">Artículos: @Model.Detalles.Sum(d => d.Cantidad)<br />¡Gracias por su compra!</div>
+</div>

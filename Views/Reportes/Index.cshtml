@@ -1,0 +1,34 @@
+@model IEnumerable<MonitorVentas.Models.InfoReporte>
+@{
+    ViewData["Title"] = "Reportes";
+    var numero = 0;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Reportes</h1>
+        <p>Elija un reporte. Todos se pueden filtrar por fechas, imprimir y exportar a Excel.</p>
+    </div>
+</div>
+
+@foreach (var grupo in Model.GroupBy(r => r.Grupo))
+{
+    <fieldset class="panel mb-3">
+        <legend class="grupo-titulo">@grupo.Key</legend>
+        <div class="row g-2">
+            @foreach (var r in grupo)
+            {
+                numero++;
+                <div class="col-md-6 col-xl-4">
+                    <a class="reporte-tarjeta" asp-action="Ver" asp-route-id="@r.Clave">
+                        <span class="reporte-num">@numero.ToString("00")</span>
+                        <span>
+                            <b>@r.Titulo</b>
+                            <small>@r.Descripcion</small>
+                        </span>
+                    </a>
+                </div>
+            }
+        </div>
+    </fieldset>
+}

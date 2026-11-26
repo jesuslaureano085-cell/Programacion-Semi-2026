@@ -1,0 +1,71 @@
+@{
+    ViewData["Title"] = "Restablecer sistema";
+    var conteos = ViewData["Conteos"] as (string Nombre, int Cantidad)[] ?? Array.Empty<(string, int)>();
+    var listo = ViewData["Listo"] as bool? ?? false;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Restablecer sistema</h1>
+        <p>Deja Monitor como recién instalado, listo para que otra persona lo pruebe desde cero.</p>
+    </div>
+</div>
+
+@if (listo)
+{
+    <div class="alert alert-success">
+        <b>Listo.</b> Se borraron todos los datos. Quedaron solo los métodos de pago y categorías iniciales,
+        y los números de registro vuelven a empezar en 1.
+    </div>
+    <p>Al reiniciar se verá otra vez la intro y Moni ofrecerá el tutorial, como la primera vez.</p>
+    <button type="button" class="btn btn-primary" id="reiniciar">Reiniciar Monitor</button>
+}
+else
+{
+    <div class="row g-3">
+        <div class="col-lg-6">
+            <fieldset class="panel h-100">
+                <legend class="grupo-titulo">Esto se borrará</legend>
+                <table class="table table-sm mb-0">
+                    @foreach (var (nombre, cantidad) in conteos)
+                    {
+                        <tr class="@(cantidad == 0 ? "text-muted" : "")">
+                            <td>@nombre</td>
+                            <td class="text-end">@cantidad</td>
+                        </tr>
+                    }
+                </table>
+                <p class="form-text mb-0 mt-2">Las categorías y métodos de pago vuelven a los iniciales
+                    (Abarrotes, Bebidas, Lácteos, Limpieza · Efectivo, Tarjeta, Transferencia).</p>
+            </fieldset>
+        </div>
+        <div class="col-lg-6">
+            <form asp-action="Restablecer" method="post" class="panel h-100" autocomplete="off">
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                <div class="alert alert-warning">
+                    <b>Esta acción no se puede deshacer.</b> Se pierden todas las ventas, compras, productos, clientes y demás registros.
+                </div>
+                <label class="form-label req" for="confirmacion">Para confirmar, escriba <b class="mono">RESTABLECER</b></label>
+                <input type="text" id="confirmacion" name="confirmacion" class="form-control mb-3" required
+                       pattern="[Rr][Ee][Ss][Tt][Aa][Bb][Ll][Ee][Cc][Ee][Rr]" title="Escriba RESTABLECER" />
+                <button type="submit" class="btn btn-danger">Borrar todo y restablecer</button>
+            </form>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        (() => {
+            const boton = document.getElementById('reiniciar');
+            if (!boton) return;
+            // Que la intro y el tutorial de Moni vuelvan a aparecer como la primera vez
+            try {
+                const claves = ['mv-arranque-visto', 'mv-bienvenida', 'mv-moni-tutorial', 'mv-moni-oculto'];
+                claves.forEach((k) => sessionStorage.removeItem(k));
+                if (window.top !== window) claves.forEach((k) => window.top.sessionStorage.removeItem(k));
+            } catch (e) { }
+            boton.addEventListener('click', () => { window.top.location.href = '/'; });
+        })();
+    </script>
+}

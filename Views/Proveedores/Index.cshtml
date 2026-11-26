@@ -1,0 +1,61 @@
+﻿@model IEnumerable<MonitorVentas.Models.Proveedor>
+@{
+    ViewData["Title"] = "Proveedores";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Proveedores</h1>
+        <p>Empresas que abastecen de mercadería al supermercado.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">+ Nuevo proveedor</a>
+</div>
+
+<form asp-action="Index" method="get" class="mb-3" role="search">
+    <div class="input-group">
+        <label class="input-group-text" for="buscar">Buscar:</label>
+        <input type="search" name="buscar" id="buscar" value="@ViewData["Buscar"]" class="form-control"
+               placeholder="Empresa, contacto, teléfono o correo..." autocomplete="off"
+               data-filtrar="#tabla" data-contador="#contador" data-entidad="proveedores" />
+        <button type="submit" class="btn btn-outline-secondary">Buscar</button>
+    </div>
+    <div class="form-text" id="contador"></div>
+</form>
+
+<div class="panel panel-flush">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle" id="tabla">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>@Html.DisplayNameFor(m => m.Nombre)</th>
+                    <th>@Html.DisplayNameFor(m => m.Contacto)</th>
+                    <th>@Html.DisplayNameFor(m => m.Telefono)</th>
+                    <th>@Html.DisplayNameFor(m => m.Correo)</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var x in Model)
+                {
+                    <tr>
+                        <td class="text-muted">@x.ProveedorId</td>
+                        <td>@x.Nombre</td>
+                        <td>@(x.Contacto ?? "—")</td>
+                        <td>@x.Telefono</td>
+                        <td>@(x.Correo ?? "—")</td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Edit" asp-route-id="@x.ProveedorId" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@x.ProveedorId" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+                <tr class="fila-vacia @(Model.Any() ? "d-none" : "")">
+                    <td colspan="6" class="text-center text-muted py-4">
+                        @(ViewData["Buscar"] != null ? "No hay proveedores que coincidan con la búsqueda." : "Todavía no hay proveedores registrados.")
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

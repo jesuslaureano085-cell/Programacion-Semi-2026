@@ -1,0 +1,30 @@
+﻿@model MonitorVentas.Models.Producto
+@{
+    ViewData["Title"] = "Editar producto";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Editar producto</h1>
+        <p>Producto #@Model.ProductoId · cambiar el precio no afecta las ventas ya registradas.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-9">
+        <div class="panel">
+            <form asp-action="Edit" asp-route-id="@Model.ProductoId" method="post" novalidate>
+                <input type="hidden" asp-for="ProductoId" />
+                <partial name="_Formulario" model="Model" />
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,30 @@
+﻿@model MonitorVentas.Models.AjusteInventario
+@{
+    ViewData["Title"] = "Editar ajuste de inventario";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Editar ajuste de inventario</h1>
+        <p>Ajuste #@Model.AjusteInventarioId · al guardar se recalcula el stock del producto.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-9">
+        <div class="panel">
+            <form asp-action="Edit" asp-route-id="@Model.AjusteInventarioId" method="post" novalidate>
+                <input type="hidden" asp-for="AjusteInventarioId" />
+                <partial name="_Formulario" model="Model" />
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

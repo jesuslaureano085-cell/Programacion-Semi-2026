@@ -1,0 +1,82 @@
+﻿@model IEnumerable<MonitorVentas.Models.DevolucionResumen>
+@{
+    ViewData["Title"] = "Devoluciones";
+    var periodo = ViewData["Periodo"] as string ?? "todas";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Devoluciones</h1>
+        <p>Productos que los clientes regresaron. El dinero se calcula con el precio que pagaron.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">+ Nueva devolución</a>
+</div>
+
+<form asp-action="Index" method="get" class="mb-3" role="search">
+    <div class="input-group">
+        <label class="input-group-text" for="buscar">Buscar:</label>
+        <input type="search" name="buscar" id="buscar" value="@ViewData["Buscar"]" class="form-control"
+               placeholder="N.º de devolución o de venta, cliente, motivo..." autocomplete="off"
+               data-filtrar="#tabla" data-contador="#contador" data-entidad="devoluciones" />
+        <label class="input-group-text" for="periodo">Período:</label>
+        <select name="periodo" id="periodo" class="form-select" style="max-width: 170px" onchange="this.form.submit()">
+            <option value="hoy" selected="@(periodo == "hoy")">Hoy</option>
+            <option value="semana" selected="@(periodo == "semana")">Últimos 7 días</option>
+            <option value="mes" selected="@(periodo == "mes")">Este mes</option>
+            <option value="todas" selected="@(periodo == "todas")">Todas</option>
+        </select>
+        <button type="submit" class="btn btn-outline-secondary">Buscar</button>
+    </div>
+    <div class="form-text" id="contador"></div>
+</form>
+
+<div class="row g-2 mb-3">
+    <div class="col-sm-4"><div class="resumen-caja"><span>Devoluciones</span><b>@Model.Count()</b></div></div>
+    <div class="col-sm-4"><div class="resumen-caja"><span>Unidades devueltas</span><b>@Model.Sum(d => d.Unidades)</b></div></div>
+    <div class="col-sm-4"><div class="resumen-caja"><span>Dinero devuelto</span><b>@Model.Sum(d => d.Total).ToString("C")</b></div></div>
+</div>
+
+<div class="panel panel-flush">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle" id="tabla">
+            <thead>
+                <tr>
+                    <th>N.º</th>
+                    <th>Fecha</th>
+                    <th>Venta</th>
+                    <th>Cliente</th>
+                    <th>Motivo</th>
+                    <th>Atendido por</th>
+                    <th class="text-end">Unidades</th>
+                    <th class="text-end">Devuelto</th>
+                    <th>Inventario</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var d in Model)
+                {
+                    <tr>
+                        <td class="mono">#@d.DevolucionId</td>
+                        <td>@d.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="mono">#@d.VentaId</td>
+                        <td>@d.Cliente</td>
+                        <td>@d.Motivo</td>
+                        <td>@d.AtendidoPor</td>
+                        <td class="text-end">@d.Unidades</td>
+                        <td class="text-end">@d.Total.ToString("C")</td>
+                        <td><span class="estado @(d.Reintegrado ? "si" : "no")">@(d.Reintegrado ? "Regresó" : "Descartado")</span></td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Details" asp-route-id="@d.DevolucionId" class="btn btn-sm btn-outline-primary">Ver</a>
+                        </td>
+                    </tr>
+                }
+                <tr class="fila-vacia @(Model.Any() ? "d-none" : "")">
+                    <td colspan="10" class="text-center text-muted py-4">
+                        @(ViewData["Buscar"] != null ? "No hay devoluciones que coincidan con la búsqueda." : "No hay devoluciones en este período.")
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

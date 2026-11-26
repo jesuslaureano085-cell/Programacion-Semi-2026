@@ -1,0 +1,169 @@
+@model MonitorVentas.Models.Reporte
+@using MonitorVentas.Models
+@{
+    ViewData["Title"] = Model.Titulo;
+    var hoy = DateTime.Today;
+    var barras = Model.Barras();
+    var columnaGrafico = Model.GraficoValor >= 0 ? Model.Columnas[Model.GraficoValor] : null;
+
+    // Atajos de rango de fechas
+    var atajos = new (string Texto, DateTime Desde, DateTime Hasta)[]
+    {
+        ("Hoy", hoy, hoy),
+        ("Últimos 7 días", hoy.AddDays(-6), hoy),
+        ("Este mes", new DateTime(hoy.Year, hoy.Month, 1), hoy),
+        ("Este año", new DateTime(hoy.Year, 1, 1), hoy)
+    };
+}
+
+<div class="page-header no-imprimir">
+    <div>
+        <h1>@Model.Titulo</h1>
+        <p>@Model.Descripcion</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <a asp-action="Index" class="btn btn-outline-secondary">Todos los reportes</a>
+        <button type="button" class="btn" onclick="window.print()">Imprimir</button>
+        <a asp-action="Exportar" asp-route-id="@Model.Clave"
+           asp-route-desde="@Model.Desde.ToString("yyyy-MM-dd")" asp-route-hasta="@Model.Hasta.ToString("yyyy-MM-dd")"
+           asp-route-productoId="@Model.ProductoId" class="btn btn-primary">Exportar a Excel</a>
+    </div>
+</div>
+
+@* Encabezado que solo aparece en papel *@
+<div class="reporte-encabezado solo-imprimir">
+    <div class="reporte-marca">MONITOR</div>
+    <div>Supermercado · Sistema de ventas</div>
+    <h2>@Model.Titulo</h2>
+    <div>
+        @if (Model.UsaFechas) { <span>Del @Model.Desde.ToString("dd/MM/yyyy") al @Model.Hasta.ToString("dd/MM/yyyy") · </span> }
+        Generado el @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+    </div>
+</div>
+
+@if (Model.UsaFechas || Model.UsaProducto)
+{
+    <form asp-action="Ver" asp-route-id="@Model.Clave" method="get" class="panel mb-3 no-imprimir">
+        <div class="row g-2 align-items-end">
+            @if (Model.UsaProducto)
+            {
+                <div class="col-md-4">
+                    <label class="form-label req" for="productoId">Producto</label>
+                    <select name="productoId" id="productoId" class="form-select" asp-items="@(ViewData["Productos"] as SelectList)">
+                        <option value="">-- Seleccione --</option>
+                    </select>
+                </div>
+            }
+            <div class="col-sm-6 col-md-3 col-lg-2">
+                <label class="form-label" for="desde">Desde</label>
+                <input type="date" name="desde" id="desde" class="form-control" value="@Model.Desde.ToString("yyyy-MM-dd")" max="@hoy.ToString("yyyy-MM-dd")" required />
+            </div>
+            <div class="col-sm-6 col-md-3 col-lg-2">
+                <label class="form-label" for="hasta">Hasta</label>
+                <input type="date" name="hasta" id="hasta" class="form-control" value="@Model.Hasta.ToString("yyyy-MM-dd")" required />
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Generar</button>
+            </div>
+        </div>
+        <div class="d-flex gap-2 flex-wrap mt-2 atajos">
+            <span class="text-muted">Rápido:</span>
+            @foreach (var a in atajos)
+            {
+                var activo = a.Desde == Model.Desde && a.Hasta == Model.Hasta;
+                <a class="btn btn-sm @(activo ? "active" : "")" asp-action="Ver" asp-route-id="@Model.Clave"
+                   asp-route-desde="@a.Desde.ToString("yyyy-MM-dd")" asp-route-hasta="@a.Hasta.ToString("yyyy-MM-dd")"
+                   asp-route-productoId="@Model.ProductoId">@a.Texto</a>
+            }
+        </div>
+    </form>
+}
+else
+{
+    <p class="text-muted no-imprimir">Este reporte muestra la situación de hoy, @hoy.ToString("dd/MM/yyyy"); no usa fechas.</p>
+}
+
+@if (Model.Aviso != null)
+{
+    <div class="alert alert-warning no-imprimir">@Model.Aviso</div>
+}
+
+@if (Model.Resumen.Any())
+{
+    <div class="row g-2 mb-3">
+        @foreach (var (etiqueta, valor) in Model.Resumen)
+        {
+            <div class="col-sm-6 col-lg"><div class="resumen-caja"><span>@etiqueta</span><b>@valor</b></div></div>
+        }
+    </div>
+}
+
+@if (barras.Any() && columnaGrafico != null)
+{
+    <div class="panel mb-3 grafico">
+        <div class="fw-bold mb-2">@Model.GraficoTitulo</div>
+        @foreach (var b in barras)
+        {
+            <div class="barra-fila">
+                <span class="barra-etiqueta" title="@b.Etiqueta">@b.Etiqueta</span>
+                <span class="barra-pista"><span class="barra-valor" style="width: @b.Ancho.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture)%"></span></span>
+                <span class="barra-numero">@Reporte.Formatear(b.Valor, columnaGrafico.Tipo)</span>
+            </div>
+        }
+    </div>
+}
+
+@if (Model.Columnas.Any() && !(Model.UsaProducto && Model.ProductoId == null))
+{
+    <div class="panel panel-flush">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 tabla-reporte">
+                <thead>
+                    <tr>
+                        @foreach (var c in Model.Columnas)
+                        {
+                            <th class="@(c.EsNumero ? "text-end" : "")">@c.Titulo</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var f in Model.Filas)
+                    {
+                        <tr class="@f.Clase">
+                            @for (var i = 0; i < Model.Columnas.Count; i++)
+                            {
+                                var c = Model.Columnas[i];
+                                <td class="@(c.EsNumero ? "text-end" : "")">@Reporte.Formatear(f.Celdas[i], c.Tipo)</td>
+                            }
+                        </tr>
+                    }
+                    @if (!Model.Filas.Any())
+                    {
+                        <tr>
+                            <td colspan="@Model.Columnas.Count" class="text-center text-muted py-4">No hay datos en este período.</td>
+                        </tr>
+                    }
+                </tbody>
+                @if (Model.TieneTotales && Model.Filas.Any())
+                {
+                    <tfoot>
+                        <tr>
+                            @for (var i = 0; i < Model.Columnas.Count; i++)
+                            {
+                                var c = Model.Columnas[i];
+                                <td class="@(c.EsNumero ? "text-end" : "")">
+                                    @(i == 0 ? "TOTAL" : c.Total ? Reporte.Formatear(Model.Sumar(i), c.Tipo) : "")
+                                </td>
+                            }
+                        </tr>
+                    </tfoot>
+                }
+            </table>
+        </div>
+    </div>
+}
+
+@if (Model.Nota != null)
+{
+    <p class="form-text mt-2">@Model.Nota</p>
+}

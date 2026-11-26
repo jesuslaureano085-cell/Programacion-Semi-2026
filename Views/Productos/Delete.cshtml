@@ -1,0 +1,51 @@
+﻿@model MonitorVentas.Models.Producto
+@{
+    ViewData["Title"] = "Eliminar producto";
+    var tieneVentas = ViewData["TieneVentas"] is true;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Eliminar producto</h1>
+        <p>Producto #@Model.ProductoId</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-xl-7">
+        @if (tieneVentas)
+        {
+            <div class="alert alert-warning">Este producto ya aparece en ventas, compras o ajustes de inventario y <strong>no se puede eliminar</strong>. Así se conserva el historial.</div>
+        }
+        else
+        {
+            <div class="alert alert-danger">¿Seguro que deseas eliminar este producto? Esta acción no se puede deshacer.</div>
+        }
+
+        <div class="panel">
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Nombre)</dt>
+                <dd class="col-sm-8">@Model.Nombre</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Codigo)</dt>
+                <dd class="col-sm-8 mono">@(Model.Codigo ?? "—")</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Categoria)</dt>
+                <dd class="col-sm-8">@Model.Categoria?.Nombre</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Proveedor)</dt>
+                <dd class="col-sm-8">@Model.Proveedor?.Nombre</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Precio)</dt>
+                <dd class="col-sm-8">@Model.Precio.ToString("C")</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Stock)</dt>
+                <dd class="col-sm-8 mb-0">@Model.Stock</dd>
+            </dl>
+        </div>
+
+        <form asp-action="Delete" asp-route-id="@Model.ProductoId" method="post" class="d-flex gap-2 mt-3">
+            <input type="hidden" asp-for="ProductoId" />
+            @if (!tieneVentas)
+            {
+                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            }
+            <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+        </form>
+    </div>
+</div>

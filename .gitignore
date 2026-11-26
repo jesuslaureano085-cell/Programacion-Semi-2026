@@ -1,0 +1,38 @@
+# Carpetas de Visual Studio y de compilación (se generan solas)
+.vs/
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.userprefs
+
+# Archivos de publicación
+PublishProfiles/*.pubxml.user
+*.pubxml.user
+publish/
+
+# Base de datos local (no se sube: se crea con Update-Database)
+*.mdf
+*.ldf
+
+# Secretos y configuración local
+appsettings.*.local.json
+secrets.json
+.env
+
+# Sistema operativo
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Paquetes y temporales
+packages/
+*.nupkg
+*.log
+*.tmp
+TestResults/
+
+# Copias comprimidas
+*.zip

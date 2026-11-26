@@ -1,0 +1,47 @@
+@model MonitorVentas.Models.Cliente
+@{
+    ViewData["Title"] = "Eliminar cliente";
+    var tieneVentas = ViewData["TieneVentas"] is true;
+}
+
+<div class="page-header">
+    <div>
+        <h1>Eliminar cliente</h1>
+        <p>Cliente #@Model.ClienteId</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-7 col-xl-6">
+        @if (tieneVentas)
+        {
+            <div class="alert alert-warning">
+                Este cliente tiene ventas registradas y <strong>no se puede eliminar</strong>.
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger">¿Seguro que deseas eliminar este cliente? Esta acción no se puede deshacer.</div>
+        }
+
+        <div class="panel">
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Nombre)</dt>
+                <dd class="col-sm-8">@Model.Nombre</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Telefono)</dt>
+                <dd class="col-sm-8">@Model.Telefono</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Direccion)</dt>
+                <dd class="col-sm-8 mb-0">@(Model.Direccion ?? "—")</dd>
+            </dl>
+        </div>
+
+        <form asp-action="Delete" asp-route-id="@Model.ClienteId" method="post" class="d-flex gap-2 mt-3">
+            <input type="hidden" asp-for="ClienteId" />
+            @if (!tieneVentas)
+            {
+                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            }
+            <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+        </form>
+    </div>
+</div>

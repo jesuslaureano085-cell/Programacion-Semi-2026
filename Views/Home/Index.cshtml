@@ -1,0 +1,98 @@
+@model MonitorVentas.Models.DashboardViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Escritorio";
+    Layout = "_LayoutEscritorio";
+    var inv = CultureInfo.InvariantCulture;
+}
+
+<!-- ===================== Pantalla de arranque ===================== -->
+<div id="arranque" role="dialog" aria-label="Pantalla de arranque de Monitor"
+     data-clientes="@Model.TotalClientes"
+     data-productos="@Model.TotalProductos"
+     data-ventas="@Model.VentasHoy"
+     data-stock="@Model.ProductosStockBajo">
+    <pre class="arranque-texto"><span id="arranque-salida"></span><span class="cursor">_</span></pre>
+
+    <canvas id="arranque-codigo" aria-hidden="true" hidden></canvas>
+
+    <div class="arranque-marca" id="arranque-marca" aria-hidden="true">
+        <!-- Logotipo MONITOR: cada letra es un trazo; la primera O es una pantalla con pulso -->
+        <svg class="logotipo" viewBox="-2 -2.5 47.6 12" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Destello: una franja blanca que recorre los trazos de izquierda a derecha -->
+                <linearGradient id="g-trazo" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="6" y2="-3">
+                    <stop offset="0" stop-color="#bfe3cc" />
+                    <stop offset=".42" stop-color="#bfe3cc" />
+                    <stop offset=".5" stop-color="#ffffff" />
+                    <stop offset=".58" stop-color="#bfe3cc" />
+                    <stop offset="1" stop-color="#bfe3cc" />
+                    <animateTransform id="brillo-anim" attributeName="gradientTransform" type="translate"
+                                      from="-8 0" to="50 0" dur="1.1s" begin="indefinite" fill="freeze" />
+                </linearGradient>
+            </defs>
+            <g id="trazos" class="trazos" stroke="url(#g-trazo)">
+                <path style="--d:0" pathLength="1" d="M0 7V0l2.5 3.5L5 0v7" />
+                <path style="--d:1" pathLength="1" d="M6.6 0h5v7h-5z" />
+                <path class="pulso" pathLength="1" d="M7.2 4h1.1l.6-1.8.9 3.2.7-1.4h.8" />
+                <path style="--d:2" pathLength="1" d="M13.2 7V0l5 7V0" />
+                <path style="--d:3" pathLength="1" d="M19.8 0h4M21.8 0v7M19.8 7h4" />
+                <path style="--d:4" pathLength="1" d="M25.4 0h5M27.9 0v7" />
+                <path style="--d:5" pathLength="1" d="M33 0h3a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1z" />
+                <path style="--d:6" pathLength="1" d="M38.6 7V0h4l1 1v1.5l-1 1h-4M41 3.5l2.6 3.5" />
+            </g>
+        </svg>
+        <div class="arranque-lema" id="arranque-lema"></div>
+    </div>
+
+    <div class="arranque-tecla" id="arranque-tecla" aria-hidden="true">ENTER &#8629;</div>
+    <div class="arranque-omitir">Presione cualquier tecla para continuar</div>
+</div>
+
+<!-- ===================== Escritorio ===================== -->
+<div id="escritorio">
+    <div id="iconos" role="list" aria-label="Íconos del escritorio"></div>
+
+    <section id="monitor" class="ventana activa" aria-label="Monitor de ventas">
+        <div class="ventana-titulo">
+            <span class="t">Monitor de ventas</span>
+            <button type="button" id="monitor-actualizar" aria-label="Actualizar monitor" title="Actualizar">&#8635;</button>
+        </div>
+        <div class="pantalla-lcd">
+            <div class="lcd-fila"><span>VENTAS HOY</span><b id="m-ventas" data-valor="@Model.VentasHoy">@Model.VentasHoy</b></div>
+            <div class="lcd-fila"><span>MONTO HOY</span><b id="m-monto" data-valor="@Model.MontoHoy.ToString(inv)">$@Model.MontoHoy.ToString("N2", inv)</b></div>
+            <div class="lcd-fila"><span>CLIENTES</span><b id="m-clientes" data-valor="@Model.TotalClientes">@Model.TotalClientes</b></div>
+            <div class="lcd-fila"><span>STOCK BAJO</span><b id="m-stock" data-valor="@Model.ProductosStockBajo">@Model.ProductosStockBajo</b></div>
+        </div>
+        <div class="ventana-estado" id="m-hora">Actualizado al abrir</div>
+    </section>
+
+    <div id="ventanas"></div>
+</div>
+
+<!-- ===================== Barra de tareas ===================== -->
+<nav id="barra" aria-label="Barra de tareas">
+    <button type="button" id="btn-inicio" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-inicio">
+        <partial name="_LogoMini" />Inicio
+    </button>
+    <div id="tareas"></div>
+    <div id="bandeja">
+        <button type="button" id="btn-avisos" aria-label="Ver último aviso" title="Avisos"></button>
+        <span id="reloj">--:--</span>
+    </div>
+</nav>
+
+<div id="menu-inicio" role="menu" aria-label="Menú Inicio" hidden>
+    <div class="menu-banda"><span><b>Monitor</b></span></div>
+    <div class="menu-items" id="menu-items"></div>
+</div>
+
+<div id="menu-contexto" role="menu" aria-label="Menú del escritorio" hidden></div>
+
+<div id="globo" role="status" hidden>
+    <button type="button" class="x" aria-label="Cerrar aviso">&times;</button>
+    <strong id="globo-titulo"></strong>
+    <span id="globo-texto"></span>
+</div>
+
+<div id="capa-dialogo" hidden></div>

@@ -1,0 +1,37 @@
+﻿@model MonitorVentas.Models.Promocion
+@{
+    ViewData["Title"] = "Eliminar promoción";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Eliminar promoción</h1>
+        <p>Promoción #@Model.PromocionId</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-xl-7">
+        <div class="alert alert-danger">¿Seguro que deseas eliminar esta promoción? Las ventas ya hechas conservan su precio con descuento.</div>
+
+        <div class="panel">
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Nombre)</dt>
+                <dd class="col-sm-8">@Model.Nombre</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Alcance)</dt>
+                <dd class="col-sm-8">@(Model.Producto != null ? "Producto: " + Model.Producto.Nombre : "Categoría: " + Model.Categoria?.Nombre)</dd>
+                <dt class="col-sm-4 text-muted fw-normal">Descuento</dt>
+                <dd class="col-sm-8">@Model.Porcentaje%</dd>
+                <dt class="col-sm-4 text-muted fw-normal">Vigencia</dt>
+                <dd class="col-sm-8">@Model.FechaInicio.ToString("dd/MM/yyyy") – @Model.FechaFin.ToString("dd/MM/yyyy")</dd>
+                <dt class="col-sm-4 text-muted fw-normal">Estado</dt>
+                <dd class="col-sm-8 mb-0">@Model.Estado</dd>
+            </dl>
+        </div>
+
+        <form asp-action="Delete" asp-route-id="@Model.PromocionId" method="post" class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+        </form>
+    </div>
+</div>

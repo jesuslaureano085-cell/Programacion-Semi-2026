@@ -1,0 +1,55 @@
+﻿@model MonitorVentas.Models.AjusteInventario
+@{
+    ViewData["Title"] = "Eliminar ajuste";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Eliminar ajuste de inventario</h1>
+        <p>Ajuste #@Model.AjusteInventarioId</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-xl-7">
+        @if (ViewData["Bloqueo"] is string bloqueo)
+        {
+            <div class="alert alert-warning">@bloqueo</div>
+        }
+        else
+        {
+            <div class="alert alert-danger">
+                ¿Seguro que deseas eliminar este ajuste? Se deshará su efecto:
+                <strong>@(Model.Tipo == "Entrada" ? $"se restarán {Model.Cantidad}" : $"se sumarán {Model.Cantidad}") unidades</strong>
+                al stock de @Model.Producto?.Nombre (hoy tiene @Model.Producto?.Stock).
+            </div>
+        }
+
+        <div class="panel">
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-muted fw-normal">Fecha</dt>
+                <dd class="col-sm-8">@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Producto)</dt>
+                <dd class="col-sm-8">@Model.Producto?.Nombre</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Tipo)</dt>
+                <dd class="col-sm-8">@Model.Tipo</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Cantidad)</dt>
+                <dd class="col-sm-8">@Model.Cantidad</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Motivo)</dt>
+                <dd class="col-sm-8">@Model.Motivo</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Empleado)</dt>
+                <dd class="col-sm-8">@Model.Empleado?.Nombre</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Observacion)</dt>
+                <dd class="col-sm-8 mb-0">@(Model.Observacion ?? "—")</dd>
+            </dl>
+        </div>
+
+        <form asp-action="Delete" asp-route-id="@Model.AjusteInventarioId" method="post" class="d-flex gap-2 mt-3">
+            @if (ViewData["Bloqueo"] == null)
+            {
+                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            }
+            <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+        </form>
+    </div>
+</div>

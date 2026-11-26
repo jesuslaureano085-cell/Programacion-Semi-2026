@@ -1,0 +1,169 @@
+﻿@model MonitorVentas.Models.DevolucionFormulario
+@{
+    ViewData["Title"] = "Nueva devolución";
+    var venta = ViewData["Venta"] as MonitorVentas.Models.Venta;
+    var yaDevuelto = ViewData["YaDevuelto"] as Dictionary<int, int> ?? new();
+    var pedidas = Model.Lineas.ToDictionary(l => l.DetalleVentaId, l => l.Cantidad);
+}
+
+<div class="page-header">
+    <div>
+        <h1>Nueva devolución</h1>
+        <p>@(venta == null ? "Primero busque la venta por su número (aparece en el ticket)." : "Marque cuántas unidades devuelve el cliente de cada producto.")</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Historial de devoluciones</a>
+</div>
+
+@if (venta == null)
+{
+    <div class="row">
+        <div class="col-lg-7">
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+            <form asp-action="Create" method="get" class="panel">
+                <label class="form-label req" for="ventaId">Número de venta</label>
+                <div class="input-group">
+                    <span class="input-group-text">#</span>
+                    <input type="number" name="ventaId" id="ventaId" class="form-control" min="1" step="1" autofocus required />
+                    <button type="submit" class="btn btn-primary">Buscar venta</button>
+                </div>
+                <div class="form-text">También puede abrir el ticket de la venta y presionar "Registrar devolución".</div>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <form asp-action="Create" method="post" id="form-devolucion" novalidate>
+        <input type="hidden" asp-for="VentaId" />
+        <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+        <div class="row g-3">
+            <div class="col-lg-8">
+                <div class="panel mb-3">
+                    <div class="row g-2">
+                        <div class="col-sm-3"><div class="text-muted small">Venta</div><div class="mono fw-bold">#@venta.VentaId</div></div>
+                        <div class="col-sm-4"><div class="text-muted small">Fecha</div><div>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</div></div>
+                        <div class="col-sm-5"><div class="text-muted small">Cliente</div><div>@(venta.Cliente?.Nombre ?? "Consumidor final")</div></div>
+                    </div>
+                </div>
+
+                <div class="panel panel-flush">
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th class="text-end">Precio pagado</th>
+                                    <th class="text-end">Vendido</th>
+                                    <th class="text-end">Ya devuelto</th>
+                                    <th class="text-center" style="width: 120px">Devolver</th>
+                                    <th class="text-end">Reembolso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ var i = 0; }
+                                @foreach (var d in venta.Detalles.OrderBy(d => d.DetalleVentaId))
+                                {
+                                    var devuelto = yaDevuelto.GetValueOrDefault(d.DetalleVentaId);
+                                    var disponible = d.Cantidad - devuelto;
+                                    <tr class="@(disponible <= 0 ? "text-muted" : "")">
+                                        <td>
+                                            @d.Producto?.Nombre
+                                            @if (d.DescuentoPorcentaje > 0)
+                                            {
+                                                <span class="descuento">-@d.DescuentoPorcentaje%</span>
+                                            }
+                                        </td>
+                                        <td class="text-end">@d.PrecioUnitario.ToString("C")</td>
+                                        <td class="text-end">@d.Cantidad</td>
+                                        <td class="text-end">@devuelto</td>
+                                        <td class="text-center">
+                                            <input type="hidden" name="Lineas[@i].DetalleVentaId" value="@d.DetalleVentaId" />
+                                            <input type="number" name="Lineas[@i].Cantidad" class="form-control form-control-sm text-center pd-cantidad"
+                                                   min="0" max="@disponible" step="1" value="@pedidas.GetValueOrDefault(d.DetalleVentaId)"
+                                                   data-precio="@d.PrecioUnitario.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                                   disabled="@(disponible <= 0)" aria-label="Unidades a devolver de @d.Producto?.Nombre" />
+                                        </td>
+                                        <td class="text-end pd-subtotal">$0.00</td>
+                                    </tr>
+                                    i++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <fieldset class="panel mb-3">
+                    <legend class="grupo-titulo">Datos de la devolución</legend>
+                    <div class="mb-3">
+                        <label asp-for="Motivo" class="form-label req"></label>
+                        <select asp-for="Motivo" class="form-select" asp-items="@(ViewData["Motivos"] as SelectList)">
+                            <option value="">-- Seleccione --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="EmpleadoId" class="form-label req"></label>
+                        <select asp-for="EmpleadoId" class="form-select" asp-items="@(ViewData["Empleados"] as SelectList)">
+                            <option value="0">-- Seleccione --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Observacion" class="form-label"></label>
+                        <input asp-for="Observacion" class="form-control" autocomplete="off" />
+                    </div>
+                    <div class="form-check mb-0">
+                        <input asp-for="Reintegrar" class="form-check-input" />
+                        <label asp-for="Reintegrar" class="form-check-label"></label>
+                        <div class="form-text">Desmárquelo si el producto está dañado o vencido (no se puede volver a vender).</div>
+                    </div>
+                </fieldset>
+
+                <div class="pantalla-total" aria-live="polite">
+                    <div class="pt-etiqueta">DEVOLVER AL CLIENTE</div>
+                    <div class="pt-valor" id="pd-total">$0.00</div>
+                    <div class="pt-detalle" id="pd-resumen">0 unidades</div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-3 btn-cobrar">Registrar devolución</button>
+            </div>
+        </div>
+    </form>
+
+}
+
+@section Scripts {
+    @if (venta != null)
+    {
+        <script>
+            // Calcula el reembolso mientras se escriben las cantidades
+            (function () {
+                const moneda = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+                const entradas = document.querySelectorAll('.pd-cantidad');
+                function calcular() {
+                    let total = 0, unidades = 0;
+                    entradas.forEach(inp => {
+                        let n = parseInt(inp.value, 10);
+                        if (!Number.isInteger(n) || n < 0) n = 0;
+                        const max = parseInt(inp.max, 10);
+                        inp.classList.toggle('input-validation-error', n > max);
+                        const sub = n * parseFloat(inp.dataset.precio);
+                        inp.closest('tr').querySelector('.pd-subtotal').textContent = moneda.format(sub);
+                        total += sub; unidades += n;
+                    });
+                    document.getElementById('pd-total').textContent = moneda.format(total);
+                    document.getElementById('pd-resumen').textContent = unidades + (unidades === 1 ? ' unidad' : ' unidades');
+                }
+                entradas.forEach(inp => inp.addEventListener('input', calcular));
+
+                // Si el motivo es dañado o vencido, se sugiere NO regresarlo al inventario
+                const motivo = document.getElementById('Motivo');
+                const reintegrar = document.getElementById('Reintegrar');
+                motivo.addEventListener('change', () => {
+                    reintegrar.checked = !(motivo.value === 'Producto defectuoso' || motivo.value === 'Producto vencido');
+                });
+                calcular();
+            })();
+        </script>
+    }
+}

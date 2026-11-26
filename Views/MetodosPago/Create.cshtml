@@ -1,0 +1,29 @@
+﻿@model MonitorVentas.Models.MetodoPago
+@{
+    ViewData["Title"] = "Nuevo método de pago";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Nuevo método de pago</h1>
+        <p>Los campos marcados con * son obligatorios.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-xl-7">
+        <div class="panel">
+            <form asp-action="Create" method="post" novalidate>
+                <partial name="_Formulario" model="Model" />
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

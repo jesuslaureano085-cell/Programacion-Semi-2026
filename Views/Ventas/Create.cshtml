@@ -1,0 +1,106 @@
+﻿@model MonitorVentas.Models.VentaFormulario
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Nueva venta";
+    var productosJson = JsonSerializer.Serialize(ViewData["Productos"]);
+    var lineasJson = JsonSerializer.Serialize(Model.Lineas);
+}
+
+<div class="page-header">
+    <div>
+        <h1>Nueva venta</h1>
+        <p>Agregue los productos, revise el total y presione <strong>Cobrar</strong>. Atajo: <kbd>F2</kbd> para buscar producto.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Historial de ventas</a>
+</div>
+
+<form asp-action="Create" method="post" id="form-venta" novalidate>
+    <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+    <div class="row g-3">
+        <div class="col-lg-8">
+            <fieldset class="panel mb-3">
+                <legend class="grupo-titulo">Agregar producto</legend>
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-7">
+                        <label class="form-label" for="pv-producto">Producto (nombre o código de barras)</label>
+                        <input id="pv-producto" class="form-control" list="pv-lista" autocomplete="off" placeholder="Escriba para buscar..." />
+                        <datalist id="pv-lista"></datalist>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="pv-cantidad">Cantidad</label>
+                        <input id="pv-cantidad" class="form-control" type="number" min="1" step="1" value="1" />
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" id="pv-agregar" class="btn btn-primary w-100">Agregar</button>
+                    </div>
+                </div>
+                <div id="pv-info" class="form-text">&nbsp;</div>
+                <div id="pv-error" class="text-danger small" role="alert"></div>
+            </fieldset>
+
+            <div class="panel panel-flush">
+                <div class="table-responsive">
+                    <table class="table align-middle" id="pv-tabla">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-end">Precio</th>
+                                <th class="text-center" style="width: 120px">Cantidad</th>
+                                <th class="text-end">Subtotal</th>
+                                <th class="text-end" style="width: 80px"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="pv-lineas">
+                            <tr class="fila-vacia">
+                                <td colspan="5" class="text-center text-muted py-4">Todavía no hay productos en la venta.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <fieldset class="panel mb-3">
+                <legend class="grupo-titulo">Datos de la venta</legend>
+                <div class="mb-3">
+                    <label asp-for="ClienteId" class="form-label"></label>
+                    <select asp-for="ClienteId" class="form-select" asp-items="@(ViewData["Clientes"] as SelectList)">
+                        <option value="">Consumidor final</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="EmpleadoId" class="form-label req"></label>
+                    <select asp-for="EmpleadoId" class="form-select" asp-items="@(ViewData["Cajeros"] as SelectList)">
+                        <option value="0">-- Seleccione --</option>
+                    </select>
+                    <span asp-validation-for="EmpleadoId" class="text-danger small"></span>
+                </div>
+                <div class="mb-0">
+                    <label asp-for="MetodoPagoId" class="form-label req"></label>
+                    <select asp-for="MetodoPagoId" class="form-select" asp-items="@(ViewData["Metodos"] as SelectList)">
+                        <option value="0">-- Seleccione --</option>
+                    </select>
+                    <span asp-validation-for="MetodoPagoId" class="text-danger small"></span>
+                </div>
+            </fieldset>
+
+            <div class="pantalla-total" aria-live="polite">
+                <div class="pt-etiqueta">TOTAL A PAGAR</div>
+                <div class="pt-valor" id="pv-total">$0.00</div>
+                <div class="pt-detalle" id="pv-resumen">0 artículos</div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-3 btn-cobrar" id="pv-cobrar">Cobrar</button>
+        </div>
+    </div>
+
+    <div id="pv-ocultos"></div>
+</form>
+
+<script id="pv-datos" type="application/json">@Html.Raw(productosJson)</script>
+<script id="pv-iniciales" type="application/json">@Html.Raw(lineasJson)</script>
+
+@section Scripts {
+    <script src="~/js/ventas.js" asp-append-version="true"></script>
+}

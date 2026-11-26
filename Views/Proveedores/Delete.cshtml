@@ -1,0 +1,48 @@
+﻿@model MonitorVentas.Models.Proveedor
+@{
+    ViewData["Title"] = "Eliminar proveedor";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Eliminar proveedor</h1>
+        <p>Registro #@Model.ProveedorId</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-xl-7">
+        @if (ViewData["Bloqueo"] is string bloqueo)
+        {
+            <div class="alert alert-warning">@bloqueo</div>
+        }
+        else
+        {
+            <div class="alert alert-danger">¿Seguro que deseas eliminar este registro? Esta acción no se puede deshacer.</div>
+        }
+
+        <div class="panel">
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Nombre)</dt>
+                <dd class="col-sm-8">@Model.Nombre</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Contacto)</dt>
+                <dd class="col-sm-8">@(Model.Contacto ?? "—")</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Telefono)</dt>
+                <dd class="col-sm-8">@Model.Telefono</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Correo)</dt>
+                <dd class="col-sm-8">@(Model.Correo ?? "—")</dd>
+                <dt class="col-sm-4 text-muted fw-normal">@Html.DisplayNameFor(m => m.Direccion)</dt>
+                <dd class="col-sm-8">@(Model.Direccion ?? "—")</dd>
+            </dl>
+        </div>
+
+        <form asp-action="Delete" asp-route-id="@Model.ProveedorId" method="post" class="d-flex gap-2 mt-3">
+            <input type="hidden" asp-for="ProveedorId" />
+            @if (ViewData["Bloqueo"] == null)
+            {
+                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            }
+            <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+        </form>
+    </div>
+</div>

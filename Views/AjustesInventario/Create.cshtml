@@ -1,0 +1,29 @@
+﻿@model MonitorVentas.Models.AjusteInventario
+@{
+    ViewData["Title"] = "Nuevo ajuste de inventario";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Nuevo ajuste de inventario</h1>
+        <p>Una entrada suma unidades al stock; una salida las resta.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-9">
+        <div class="panel">
+            <form asp-action="Create" method="post" novalidate>
+                <partial name="_Formulario" model="Model" />
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary">Registrar ajuste</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

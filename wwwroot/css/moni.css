@@ -1,0 +1,139 @@
+/* =====================================================================
+   MONI — el ayudante del escritorio
+   ===================================================================== */
+#moni {
+    position: fixed; z-index: 5400;
+    width: 64px; height: 72px;
+    transition: left .7s cubic-bezier(.3, .9, .3, 1.15), top .7s cubic-bezier(.3, .9, .3, 1.15);
+}
+#moni[hidden] { display: none; }
+
+.moni-cuerpo {
+    display: block; width: 64px; height: 72px; padding: 0;
+    background: none; border: 0; cursor: grab; touch-action: none;
+    filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, .35));
+    animation: moni-flota 3.2s ease-in-out infinite;
+}
+.moni-cuerpo svg { display: block; image-rendering: pixelated; }
+.moni-cuerpo:focus-visible { outline: 1px dotted #fff; outline-offset: 2px; }
+
+@keyframes moni-flota { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+/* Entrada y salto al hacerle clic */
+#moni.entrando .moni-cuerpo { animation: moni-entra .9s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes moni-entra { from { transform: translateY(120px) scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+#moni.saltando .moni-cuerpo { animation: moni-salta .35s ease-out; }
+@keyframes moni-salta { 40% { transform: translateY(-10px) scaleY(1.05); } 70% { transform: translateY(1px) scaleY(.95); } }
+
+/* Ojos: parpadeo */
+.moni-ojos { transition: transform .25s; transform-origin: 8px 6px; }
+.moni-ojos.parpadeo { transform: scaleY(.15); }
+
+/* Boca: sonrisa en reposo, pulso que se mueve al hablar */
+.moni-boca.boca-b { display: none; }
+#moni.hablando .moni-boca.boca-a { animation: boca-a .24s steps(1) infinite; }
+#moni.hablando .moni-boca.boca-b { display: inline; animation: boca-b .24s steps(1) infinite; }
+@keyframes boca-a { 0% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes boca-b { 0% { opacity: 0; } 50% { opacity: 1; } }
+
+/* ---------- Globo de diálogo ---------- */
+.moni-globo {
+    position: absolute; width: 310px;
+    padding: 8px 10px 9px;
+    background: #ffffe1; color: #111;
+    border: 1px solid #111; border-radius: 7px;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, .35);
+    font: 12px/1.4 Tahoma, "MS Sans Serif", Verdana, sans-serif;
+    user-select: text;
+}
+.moni-globo[hidden] { display: none; }
+
+/* Posiciones del globo según dónde esté Moni */
+#moni:not(.globo-derecha):not(.globo-abajo) .moni-globo { right: 8px; bottom: 80px; }
+#moni:not(.globo-derecha).globo-abajo .moni-globo { right: 74px; top: 0; }
+#moni.globo-derecha .moni-globo { left: 74px; bottom: 0; }
+#moni.globo-derecha.globo-abajo .moni-globo { bottom: auto; top: 0; }
+
+/* Colita del globo (en su posición de casa) */
+#moni:not(.globo-derecha):not(.globo-abajo) .moni-globo::after,
+#moni:not(.globo-derecha):not(.globo-abajo) .moni-globo::before {
+    content: ""; position: absolute; right: 15px; border: 9px solid transparent; border-bottom: 0;
+}
+#moni:not(.globo-derecha):not(.globo-abajo) .moni-globo::after { bottom: -9px; border-top-color: #111; }
+#moni:not(.globo-derecha):not(.globo-abajo) .moni-globo::before { bottom: -7px; right: 16px; border-width: 8px; border-top-color: #ffffe1; z-index: 1; }
+
+.moni-titulo { display: block; margin: 0 18px 3px 0; color: #1f5c4a; }
+.moni-texto { min-height: 18px; white-space: pre-line; }
+.moni-x {
+    position: absolute; top: 4px; right: 5px;
+    width: 16px; height: 15px; padding: 0;
+    background: none; border: 1px solid transparent; line-height: 1; cursor: pointer;
+}
+.moni-x:hover { border-color: #888; }
+
+.moni-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.moni-chips:empty { display: none; }
+.moni-chip {
+    padding: 1px 7px; font: inherit; font-size: 11px;
+    background: #fff; color: #1f5c4a; border: 1px solid #1f5c4a; border-radius: 9px; cursor: pointer;
+}
+.moni-chip:hover { background: #1f5c4a; color: #fff; }
+
+.moni-pregunta { display: flex; gap: 4px; margin-top: 7px; }
+.moni-pregunta[hidden] { display: none; }
+.moni-pregunta input {
+    flex: 1; min-width: 0; height: 23px; padding: 2px 5px;
+    font: inherit; background: #fff; border: 0;
+    box-shadow: inset 1px 1px #808080, inset -1px -1px #fff, inset 2px 2px #404040, inset -2px -2px #e8e5dc;
+}
+.moni-pregunta input:focus { outline: none; }
+.moni-pregunta .boton95 { min-width: 0; }
+
+.moni-acciones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; margin-top: 8px; }
+.moni-acciones:empty { display: none; }
+.moni-acciones .boton95 { min-width: 0; font: inherit; }
+.moni-acciones .boton95.principal { font-weight: bold; outline: 1px solid #111; }
+
+/* Marco que resalta lo que Moni explica en el tutorial */
+#moni-foco {
+    position: fixed; z-index: 5300; pointer-events: none;
+    border: 2px dashed #f2c230;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, .25);
+    animation: foco-late 1s ease-in-out infinite;
+    transition: left .5s, top .5s, width .5s, height .5s;
+}
+#moni-foco[hidden] { display: none; }
+@keyframes foco-late { 50% { border-color: #fff; } }
+
+/* El globo de avisos del sistema se corre a la izquierda para no tapar a Moni */
+body.con-moni #globo { right: 92px; }
+
+@media (prefers-reduced-motion: reduce) {
+    .moni-cuerpo, #moni-foco { animation: none; }
+    #moni { transition: none; }
+}
+
+/* Barra de avance del tutorial y de las guías */
+.moni-progreso { height: 6px; margin: 0 0 6px; background: #fff; box-shadow: inset 1px 1px #808080, inset -1px -1px #fff; }
+.moni-progreso[hidden] { display: none; }
+.moni-progreso span {
+    display: block; height: 100%; width: 0;
+    background: repeating-linear-gradient(90deg, #1f5c4a 0 6px, #2d7a62 6px 8px);
+    transition: width .4s;
+}
+
+/* Mientras se arrastra: sin transición ni flotación, y con la "mano cerrada" */
+#moni.arrastrando { transition: none; }
+#moni.arrastrando .moni-cuerpo { cursor: grabbing; animation: none; transform: scale(1.06); }
+.moni-mirada { transition: transform .12s; }
+
+/* Despedida al apagar: Moni al centro, más grande, con el globo encima */
+#moni.centro { z-index: 9000; transition: left .8s cubic-bezier(.3, .9, .3, 1.1), top .8s cubic-bezier(.3, .9, .3, 1.1); }
+#moni.centro .moni-cuerpo { animation: none; transform: scale(1.6); transition: transform .6s; }
+#moni.centro:not(.globo-derecha):not(.globo-abajo) .moni-globo {
+    right: auto; left: 50%; bottom: 112px; transform: translateX(-50%);
+    width: 300px; text-align: center; font-size: 14px;
+}
+#moni.centro:not(.globo-derecha):not(.globo-abajo) .moni-globo::after { right: auto; left: calc(50% - 9px); }
+#moni.centro:not(.globo-derecha):not(.globo-abajo) .moni-globo::before { right: auto; left: calc(50% - 8px); }
+#moni.centro .moni-x { display: none; }

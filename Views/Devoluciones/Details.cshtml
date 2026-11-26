@@ -1,0 +1,52 @@
+﻿@model MonitorVentas.Models.Devolucion
+@{
+    ViewData["Title"] = $"Devolución {Model.DevolucionId}";
+}
+
+<div class="page-header no-imprimir">
+    <div>
+        <h1>Devolución #@Model.DevolucionId</h1>
+        <p>@(Model.Reintegrado ? "Los productos regresaron al inventario." : "Los productos se descartaron (no regresaron al inventario).")</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+        <button type="button" class="btn" onclick="window.print()">Imprimir</button>
+        <a asp-controller="Ventas" asp-action="Details" asp-route-id="@Model.VentaId" class="btn">Ver venta #@Model.VentaId</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Historial</a>
+    </div>
+</div>
+
+<div class="ticket">
+    <div class="ticket-cabecera">
+        <div class="ticket-marca">MONITOR</div>
+        <div>Comprobante de devolución</div>
+        <div class="ticket-linea"></div>
+        <div>Devolución N.º @Model.DevolucionId.ToString("D6")</div>
+        <div>@Model.Fecha.ToString("dd/MM/yyyy  HH:mm")</div>
+        <div>Venta original: #@Model.VentaId.ToString("D6")</div>
+        <div>Cliente: @(Model.Venta?.Cliente?.Nombre ?? "Consumidor final")</div>
+        <div>Atendido por: @Model.Empleado?.Nombre</div>
+        <div>Motivo: @Model.Motivo</div>
+        @if (Model.Observacion != null)
+        {
+            <div>Obs.: @Model.Observacion</div>
+        }
+        <div class="ticket-linea"></div>
+    </div>
+    <table class="ticket-tabla">
+        @foreach (var d in Model.Detalles.OrderBy(d => d.DetalleDevolucionId))
+        {
+            <tr><td colspan="2">@d.DetalleVenta?.Producto?.Nombre</td></tr>
+            <tr class="ticket-sub">
+                <td>@d.Cantidad x @d.DetalleVenta?.PrecioUnitario.ToString("C")</td>
+                <td class="text-end">@d.Subtotal.ToString("C")</td>
+            </tr>
+        }
+    </table>
+    <div class="ticket-linea"></div>
+    <div class="ticket-total">
+        <span>DEVUELTO</span>
+        <span>@Model.Total.ToString("C")</span>
+    </div>
+    <div class="ticket-linea"></div>
+    <div class="ticket-pie">@(Model.Reintegrado ? "Mercadería reintegrada al inventario" : "Mercadería descartada")</div>
+</div>

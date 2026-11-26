@@ -1,0 +1,41 @@
+﻿@model MonitorVentas.Models.Compra
+@{
+    ViewData["Title"] = "Anular compra";
+    var faltantes = ViewData["Faltantes"] as List<string> ?? new();
+}
+
+<div class="page-header">
+    <div>
+        <h1>Anular compra #@Model.CompraId</h1>
+        <p>La compra quedará en el historial marcada como anulada.</p>
+    </div>
+</div>
+
+@if (faltantes.Any())
+{
+    <div class="alert alert-warning">
+        <strong>No se puede anular:</strong> ya se vendió o se retiró parte de esta mercadería.
+        <ul>
+            @foreach (var f in faltantes)
+            {
+                <li>@f</li>
+            }
+        </ul>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        Al anular esta compra se <strong>retiran del inventario</strong> todas sus unidades. Esta acción no se puede deshacer.
+    </div>
+}
+
+<form asp-action="Anular" asp-route-id="@Model.CompraId" method="post" class="d-flex gap-2 mb-3">
+    @if (!faltantes.Any())
+    {
+        <button type="submit" class="btn btn-danger">Sí, anular compra</button>
+    }
+    <a asp-action="Details" asp-route-id="@Model.CompraId" class="btn btn-outline-secondary">Volver</a>
+</form>
+
+<partial name="_Comprobante" model="Model" />

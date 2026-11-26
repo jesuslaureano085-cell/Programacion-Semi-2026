@@ -1,0 +1,19 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Ocurrió un error</h1>
+        <p>No se pudo completar la operación. Intente de nuevo; si el problema continúa, avise al administrador.</p>
+    </div>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Volver al escritorio</a>
+</div>
+
+@if (Model.ShowRequestId)
+{
+    <div class="panel" style="max-width: 560px">
+        Código de seguimiento: <span class="mono">@Model.RequestId</span>
+    </div>
+}

@@ -1,0 +1,27 @@
+﻿@model MonitorVentas.Models.Venta
+@{
+    ViewData["Title"] = "Anular venta";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Anular venta #@Model.VentaId</h1>
+        <p>La venta quedará en el historial marcada como anulada.</p>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="alert alert-warning">
+            Al anular esta venta se <strong>devuelven al inventario</strong> las unidades vendidas
+            y deja de contar en los totales del día. Esta acción no se puede deshacer.
+        </div>
+        <form asp-action="Anular" asp-route-id="@Model.VentaId" method="post" class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">Sí, anular venta</button>
+            <a asp-action="Details" asp-route-id="@Model.VentaId" class="btn btn-outline-secondary">Volver</a>
+        </form>
+    </div>
+    <div class="col-lg-6">
+        <partial name="_Ticket" model="Model" />
+    </div>
+</div>

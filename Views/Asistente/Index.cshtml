@@ -1,0 +1,164 @@
+@model List<MonitorVentas.Models.Prediccion>
+@using System.Globalization
+@using MonitorVentas.Data
+@{
+    ViewData["Title"] = "Asistente IA";
+    var hayDemo = ViewData["HayDemo"] as bool? ?? false;
+    var conIA = Model.Count(p => p.Metodo.StartsWith("IA"));
+    var urgentes = Model.Count(p => p.Urgente);
+    var pronto = Model.Count(p => p.Estado == "Pronto");
+    var porProveedor = Model.Where(p => p.CantidadSugerida > 0)
+                            .GroupBy(p => new { p.ProveedorId, p.Proveedor })
+                            .OrderBy(g => g.Min(p => p.DiasParaAgotarse ?? int.MaxValue))
+                            .ToList();
+}
+@functions {
+    // Convierte una lista de valores en puntos "x,y" para la mini gráfica (120 x 28 px, 28 días)
+    static string Puntos(IEnumerable<float> valores, int desde, float maximo) =>
+        string.Join(" ", valores.Select((v, i) =>
+            ((desde + i) * 120.0 / 27).ToString("0.#", CultureInfo.InvariantCulture) + "," +
+            (26 - v / maximo * 23).ToString("0.#", CultureInfo.InvariantCulture)));
+}
+
+<div class="page-header">
+    <div>
+        <h1>Asistente IA</h1>
+        <p>Predicción de inventario con aprendizaje automático (ML.NET): qué se va a vender, cuándo se agota y cuánto comprar.</p>
+    </div>
+    @if (!hayDemo)
+    {
+        <a asp-action="DatosDemo" class="btn">Datos de demostración...</a>
+    }
+</div>
+
+@if (Model.Any() && conIA == 0)
+{
+    <div class="alert alert-info">
+        <b>Todavía hay poco historial.</b> El modelo de IA necesita al menos @PrediccionInventario.MinimoParaIA días de ventas
+        por producto; mientras tanto se usa un promedio simple.
+        @if (!hayDemo)
+        {
+            <span>Para la demostración, use <a asp-action="DatosDemo">Datos de demostración</a>.</span>
+        }
+    </div>
+}
+
+<div class="row g-2 mb-3">
+    <div class="col-sm-6 col-lg-3"><div class="resumen-caja"><span>Productos analizados</span><b>@Model.Count</b></div></div>
+    <div class="col-sm-6 col-lg-3"><div class="resumen-caja"><span>Con modelo de IA</span><b>@conIA</b></div></div>
+    <div class="col-sm-6 col-lg-3"><div class="resumen-caja"><span>Críticos o agotados</span><b class="@(urgentes > 0 ? "text-danger" : "")">@urgentes</b></div></div>
+    <div class="col-sm-6 col-lg-3"><div class="resumen-caja"><span>Se agotan esta semana</span><b>@pronto</b></div></div>
+</div>
+
+@if (porProveedor.Any())
+{
+    <fieldset class="panel mb-3">
+        <legend class="grupo-titulo">Compras sugeridas (para @PrediccionInventario.DiasCobertura días)</legend>
+        @foreach (var g in porProveedor)
+        {
+            <div class="ia-sugerencia">
+                <div>
+                    <b>@g.Key.Proveedor</b>
+                    <small>@g.Count() producto(s) · @g.Sum(p => p.CantidadSugerida).ToString("#,0") unidades:
+                        @(string.Join(", ", g.Take(4).Select(p => $"{p.Producto} ({p.CantidadSugerida})")) + (g.Count() > 4 ? "..." : ""))</small>
+                </div>
+                <a class="btn btn-primary" asp-controller="Compras" asp-action="Create"
+                   asp-route-proveedorId="@g.Key.ProveedorId" asp-route-sugerida="true">Crear compra sugerida</a>
+            </div>
+        }
+    </fieldset>
+}
+
+<div class="mb-2">
+    <div class="input-group">
+        <label class="input-group-text" for="buscar">Buscar:</label>
+        <input type="search" id="buscar" class="form-control" placeholder="Producto, categoría, proveedor o estado..."
+               autocomplete="off" data-filtrar="#tabla" data-contador="#contador" data-entidad="productos" />
+    </div>
+    <div class="form-text" id="contador"></div>
+</div>
+
+<div class="panel panel-flush">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="tabla">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th title="Gris: últimos 21 días. Verde: pronóstico de los próximos 7.">Ventas y pronóstico</th>
+                    <th class="text-end">Stock</th>
+                    <th class="text-end">Venta/día</th>
+                    <th class="text-end">Próx. 7 días</th>
+                    <th>Se agota</th>
+                    <th>Tendencia</th>
+                    <th class="text-end">Comprar</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    var maximo = Math.Max(1f, p.Historia.Concat(p.Pronostico).DefaultIfEmpty(0f).Max());
+                    <tr class="@(p.Urgente ? "fila-alerta" : "")">
+                        <td>
+                            @p.Producto
+                            <small class="d-block text-muted">@p.Categoria · @p.Proveedor</small>
+                        </td>
+                        <td>
+                            <svg class="ia-grafica" viewBox="0 0 120 28" width="120" height="28" aria-hidden="true">
+                                <line x1="@((20 * 120.0 / 27).ToString("0.#", CultureInfo.InvariantCulture))" y1="0"
+                                      x2="@((20 * 120.0 / 27).ToString("0.#", CultureInfo.InvariantCulture))" y2="28" class="hoy" />
+                                <polyline points="@(Puntos(p.Historia, 0, maximo))" class="real" />
+                                @if (p.Pronostico.Length > 0)
+                                {
+                                    <polyline points="@(Puntos(p.Historia.TakeLast(1).Concat(p.Pronostico), 20, maximo))" class="prevista" />
+                                }
+                            </svg>
+                            <small class="d-block text-muted">@p.Metodo</small>
+                        </td>
+                        <td class="text-end">@p.Stock</td>
+                        <td class="text-end">@(p.DiasParaAgotarse == null ? "—" : p.VentaDiaria.ToString("0.0"))</td>
+                        <td class="text-end">
+                            @if (p.DiasParaAgotarse == null) { <span>—</span> }
+                            else
+                            {
+                                <b>@p.Proximos7</b>
+                                <small class="d-block text-muted">entre @p.Minimo7 y @p.Maximo7</small>
+                            }
+                        </td>
+                        <td>
+                            @if (p.DiasParaAgotarse == null) { <span class="text-muted">No se mueve</span> }
+                            else if (p.Stock == 0) { <b>Ya se agotó</b> }
+                            else if (p.DiasParaAgotarse == 0) { <b>Hoy</b> }
+                            else
+                            {
+                                <span>en <b>@p.DiasParaAgotarse</b> día(s)</span>
+                                <small class="d-block text-muted">@p.FechaAgotado?.ToString("ddd dd/MM")</small>
+                            }
+                        </td>
+                        <td class="text-nowrap">
+                            @if (p.Tendencia == "Subiendo") { <span class="ia-tendencia sube">▲ Subiendo</span> }
+                            else if (p.Tendencia == "Bajando") { <span class="ia-tendencia baja">▼ Bajando</span> }
+                            else if (p.Tendencia == "Estable") { <span class="ia-tendencia">► Estable</span> }
+                            else { <span class="text-muted">—</span> }
+                        </td>
+                        <td class="text-end">@(p.CantidadSugerida > 0 ? p.CantidadSugerida.ToString("#,0") : "—")</td>
+                        <td><span class="estado @p.ClaseEstado">@p.Estado</span></td>
+                    </tr>
+                }
+                <tr class="fila-vacia @(Model.Any() ? "d-none" : "")">
+                    <td colspan="9" class="text-center text-muted py-4">No hay productos para analizar.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<fieldset class="panel mt-3">
+    <legend class="grupo-titulo">¿Cómo piensa el asistente?</legend>
+    <ol class="mb-0 ia-pasos">
+        <li><b>Aprende</b> del historial: para cada producto arma la lista de unidades vendidas por día (últimos @PrediccionInventario.DiasHistoria días, sin ventas anuladas).</li>
+        <li><b>Encuentra patrones</b> con el modelo SSA de ML.NET (Singular Spectrum Analysis): la tendencia y el ciclo semanal (los fines de semana se vende más).</li>
+        <li><b>Pronostica</b> los próximos @PrediccionInventario.Horizonte días, con un rango probable (90 % de confianza).</li>
+        <li><b>Decide</b>: divide el stock entre la venta diaria esperada para saber cuándo se agota, y sugiere comprar lo necesario para @PrediccionInventario.DiasCobertura días más un margen de seguridad.</li>
+    </ol>
+</fieldset>
